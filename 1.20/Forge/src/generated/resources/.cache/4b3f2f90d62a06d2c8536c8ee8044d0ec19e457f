@@ -1,0 +1,3 @@
+// 1.20.1	2023-06-27T11:58:30.404192	Tags for minecraft:block mod id thinair
+9ecfe852b00399649deddc2aec3554aa8379088a data/minecraft/tags/blocks/mineable/pickaxe.json
+de55269b3c1ed4c9db82ca056d5430821ac8a34b data/minecraft/tags/blocks/wall_post_override.json

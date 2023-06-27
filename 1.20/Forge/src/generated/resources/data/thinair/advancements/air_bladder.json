@@ -1,0 +1,37 @@
+{
+  "parent": "thinair:root",
+  "criteria": {
+    "bad_air": {
+      "conditions": {
+        "air_qualities": [
+          "yellow",
+          "red"
+        ],
+        "protection": "bladder"
+      },
+      "trigger": "thinair:breathe_bad_air"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "advancement.thinair:air_bladder.desc"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "thinair:air_bladder",
+      "nbt": "{Damage:0}"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancement.thinair:air_bladder"
+    }
+  },
+  "requirements": [
+    [
+      "bad_air"
+    ]
+  ],
+  "sends_telemetry_event": true
+}
