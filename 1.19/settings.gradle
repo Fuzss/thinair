@@ -30,6 +30,16 @@ dependencyResolutionManagement {
     versionCatalogs {
         libs {
             from("fuzs.sharedcatalogs:sharedcatalogs:${dependenciesVersionCatalog}")
+            if (settings.ext.has("dependenciesPuzzlesLibVersion")) {
+                version("puzzleslib-version", settings.ext.find("dependenciesPuzzlesLibVersion"))
+            }
+            if (settings.ext.has("dependenciesMinPuzzlesLibVersion")) {
+                version("puzzleslib-min", settings.ext.find("dependenciesMinPuzzlesLibVersion"))
+            }
+            if (settings.ext.has("dependenciesPuzzlesApi")) {
+                version("puzzlesapi", settings.ext.find("dependenciesPuzzlesApi"))
+            }
+            version("trinkets", "3.4.1")
         }
     }
 }

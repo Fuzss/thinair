@@ -1,0 +1,14 @@
+// 1.19.2	2023-07-06T15:21:25.179956	Block States: thinair
+a3e5ddd0afd2113bb432f72c8840d0127687958d assets/thinair/blockstates/safety_lantern.json
+d820c1ab9c471c33cbae16831ce899921373e170 assets/thinair/blockstates/signal_torch.json
+469670a6280370ad131eec5c74f9c6170529c5fd assets/thinair/blockstates/wall_signal_torch.json
+0bec1ace0c4e0b6501ab303b11c99c133eda1b0f assets/thinair/models/block/lantern_blue.json
+5d596b818d28636e1fd8e091d201ee9ed25d9f32 assets/thinair/models/block/lantern_blue_hanging.json
+464e69e570f0868f2d694889457f15f463acc383 assets/thinair/models/block/lantern_green.json
+e2415f0066d2358c5b8c6ab04707dd23612c866f assets/thinair/models/block/lantern_green_hanging.json
+cee80e0c74fabaadd0a0428bc9cf2346488c7478 assets/thinair/models/block/lantern_red.json
+dadf152b5dcb16ba15b580daec32c6fd52dc8475 assets/thinair/models/block/lantern_red_hanging.json
+115ae579b02a24e8f135056a4060d1899c3b535f assets/thinair/models/block/lantern_yellow.json
+9c27119b013f8afa9d45a36a8bc79c379ee8259f assets/thinair/models/block/lantern_yellow_hanging.json
+02816a49e2ddcc31ba394ab42d784b1d6621c5af assets/thinair/models/block/signal_torch.json
+9569f9960e2044ef5ef101646e81927434d21d3b assets/thinair/models/block/wall_signal_torch.json

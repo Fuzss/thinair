@@ -1,0 +1,37 @@
+{
+  "parent": "thinair:air_bladder",
+  "criteria": {
+    "bad_air": {
+      "conditions": {
+        "air_qualities": [
+          "green",
+          "blue",
+          "yellow",
+          "red"
+        ],
+        "air_source": "soul"
+      },
+      "trigger": "thinair:breathe_bad_air"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "advancement.thinair:soul.desc"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "minecraft:soul_campfire"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancement.thinair:soul"
+    }
+  },
+  "requirements": [
+    [
+      "bad_air"
+    ]
+  ]
+}
