@@ -4,8 +4,8 @@ import net.minecraft.world.item.ItemStack;
 
 public class AirBladderForgeItem extends AirBladderItem {
 
-    public AirBladderForgeItem(Properties pProperties) {
-        super(pProperties);
+    public AirBladderForgeItem(Properties properties) {
+        super(properties);
     }
 
     @Override

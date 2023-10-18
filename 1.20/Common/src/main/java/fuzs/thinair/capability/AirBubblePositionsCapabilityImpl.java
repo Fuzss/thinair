@@ -12,8 +12,7 @@ import java.util.Map;
  * Stores positions of air bubble projections as a struct of arrays
  */
 public class AirBubblePositionsCapabilityImpl implements AirBubblePositionsCapability {
-    public static final String TAG_POSITIONS = "Positions", TAG_QUALITY = "AieQuality";
-    public static final String TAG_SKIP_COUNT_LEFT = "SkipCountLeft";
+    public static final String TAG_POSITIONS = "Positions", TAG_QUALITY = "AieQuality", TAG_SKIP_COUNT_LEFT = "SkipCountLeft";
 
     private Map<BlockPos, AirQualityLevel> airBubbleEntries = Maps.newHashMap();
     // Number of times we will skip rescanning this.

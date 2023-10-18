@@ -11,7 +11,7 @@ dependencies {
 
     // Cardinal Components
     modApi(include(libs.cardinalcomponentsbase.fabric.get()))
-    modApi(include(libs.cardinalcomponentsentity.fabric.get()))
+//    modApi(include(libs.cardinalcomponentsentity.fabric.get()))
 //    modApi(include(libs.cardinalcomponentsblock.fabric.get()))
     modApi(include(libs.cardinalcomponentschunk.fabric.get()))
 //    modApi(include(libs.cardinalcomponentsworld.fabric.get()))

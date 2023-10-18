@@ -14,9 +14,9 @@ import net.minecraftforge.data.event.GatherDataEvent;
 
 import java.util.Locale;
 
-public class ModBlockModels extends AbstractModelProvider {
+public class ModModelProvider extends AbstractModelProvider {
 
-    public ModBlockModels(GatherDataEvent evt, String modId) {
+    public ModModelProvider(GatherDataEvent evt, String modId) {
         super(evt, modId);
     }
 
@@ -52,22 +52,11 @@ public class ModBlockModels extends AbstractModelProvider {
                     .end();
         }
 
-        AirQualityLevel[] aqs = AirQualityLevel.values();
-        for (int i = 0; i < aqs.length; i++) {
-            AirQualityLevel aq = aqs[3 - i];
-            String name = "lantern_" + aq.getSerializedName();
+        for (AirQualityLevel airQualityLevel : AirQualityLevel.values()) {
+            String name = "lantern_" + airQualityLevel.getSerializedName();
             this.basicItem(this.modLoc(name));
             ResourceLocation texPath = this.modLoc("item/" + name);
-            this.itemModels().getBuilder(this.itemName(ModRegistry.SAFETY_LANTERN_ITEM.get()))
-                    .override()
-                    .predicate(ThinAir.id("air_quality"), i)
-                    .model(new ModelFile.UncheckedModelFile(texPath))
-                    .end();
-
-            this.itemModels().singleTexture("fake_always_" + aq.getSerializedName() + "_lantern", new ResourceLocation("item/generated"),
-                    "layer0", texPath);
+            this.itemModels().getBuilder(this.itemName(ModRegistry.SAFETY_LANTERN_ITEM.get())).override().predicate(ThinAir.id("air_quality_level"), airQualityLevel.getItemModelProperty()).model(new ModelFile.UncheckedModelFile(texPath)).end();
         }
-        this.itemModels().singleTexture("fake_rainbow_lantern", new ResourceLocation("item/generated"),
-                "layer0", this.modLoc("item/lantern_rainbow"));
     }
 }

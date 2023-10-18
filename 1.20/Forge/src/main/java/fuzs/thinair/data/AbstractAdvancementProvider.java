@@ -28,13 +28,13 @@ public abstract class AbstractAdvancementProvider implements ForgeAdvancementPro
         this.modId = modId;
     }
 
-    protected DisplayInfo simple(ItemLike icon, String name, FrameType frameType) {
-        return this.simpleWithBackground(icon, name, frameType, null);
+    protected DisplayInfo simple(ItemStack itemStack, String name, FrameType frameType) {
+        return this.simpleWithBackground(itemStack, name, frameType, null);
     }
 
-    protected DisplayInfo simpleWithBackground(ItemLike icon, String name, FrameType frameType, ResourceLocation background) {
+    protected DisplayInfo simpleWithBackground(ItemStack itemStack, String name, FrameType frameType, ResourceLocation background) {
         name = "advancement." + this.modId + ":" + name;
-        return new DisplayInfo(new ItemStack(icon.asItem()), Component.translatable(name), Component.translatable(name + ".desc"), background, frameType, true, true, false);
+        return new DisplayInfo(itemStack, Component.translatable(name), Component.translatable(name + ".desc"), background, frameType, true, true, false);
     }
 
     protected String prefix(String name) {

@@ -1,4 +1,4 @@
-// 1.20.1	2023-10-18T21:10:15.443182	Block States: thinair
+// 1.20.1	2023-10-18T22:28:30.041645	Block States: thinair
 a3e5ddd0afd2113bb432f72c8840d0127687958d assets/thinair/blockstates/safety_lantern.json
 d820c1ab9c471c33cbae16831ce899921373e170 assets/thinair/blockstates/signal_torch.json
 469670a6280370ad131eec5c74f9c6170529c5fd assets/thinair/blockstates/wall_signal_torch.json
@@ -16,15 +16,10 @@ d143eb0ee6a2bff7d116a21f7048bdd91ddd9ced assets/thinair/models/item/air_bladder.
 4026373ca7ba05947b90941f78275f0618cdf187 assets/thinair/models/item/air_bladder_0.json
 3a5dc203b03be9fcbadb381142d3bcdeae1353f0 assets/thinair/models/item/air_bladder_1.json
 d5276f38c8c5a2d460d31b72898e67de8a1e430c assets/thinair/models/item/air_bladder_2.json
-f579ef48f950c77c8405c924c142082ba4d5a240 assets/thinair/models/item/fake_always_blue_lantern.json
-0570fcde1211d9e18ebed4402816f1f0d85bfda6 assets/thinair/models/item/fake_always_green_lantern.json
-30a7e1166a4245e73fe4e4013814eeb812b6b7e3 assets/thinair/models/item/fake_always_red_lantern.json
-1f874f8b5c3d1d746d8ba60e3303d183f2719d18 assets/thinair/models/item/fake_always_yellow_lantern.json
-e0385e24630ce1436203281aaffe8596c607cb69 assets/thinair/models/item/fake_rainbow_lantern.json
 f579ef48f950c77c8405c924c142082ba4d5a240 assets/thinair/models/item/lantern_blue.json
 0570fcde1211d9e18ebed4402816f1f0d85bfda6 assets/thinair/models/item/lantern_green.json
 30a7e1166a4245e73fe4e4013814eeb812b6b7e3 assets/thinair/models/item/lantern_red.json
 1f874f8b5c3d1d746d8ba60e3303d183f2719d18 assets/thinair/models/item/lantern_yellow.json
 e0d77f66ec6c870e46d5b5e14fdb01b65f69895f assets/thinair/models/item/respirator.json
-14b4ec33c23c1e4ced8afc2f1c1d438adf22db66 assets/thinair/models/item/safety_lantern.json
+297a68c03deecdcf606c15b71972cf1ac4f2d150 assets/thinair/models/item/safety_lantern.json
 5912f3bded9d21acbac0b4e0a67a380c73136d15 assets/thinair/models/item/soulfire_bottle.json

@@ -2,6 +2,7 @@ package fuzs.thinair.world.level.block;
 
 import fuzs.thinair.api.AirQualityHelper;
 import fuzs.thinair.api.AirQualityLevel;
+import fuzs.thinair.init.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -35,6 +36,7 @@ public class SafetyLanternBlock extends LanternBlock {
     public static final EnumProperty<AirQualityLevel> AIR_QUALITY =
         EnumProperty.create("air_quality", AirQualityLevel.class);
     public static final BooleanProperty LOCKED = BlockStateProperties.LOCKED;
+    public static final String TAG_AIR_QUALITY_LEVEL = "AirQualityLevel";
 
     public SafetyLanternBlock(Properties props) {
         super(props);
@@ -150,5 +152,11 @@ public class SafetyLanternBlock extends LanternBlock {
     @Override
     public int getAnalogOutputSignal(BlockState pState, Level pLevel, BlockPos pPos) {
         return pState.getValue(AIR_QUALITY).getOutputSignal();
+    }
+
+    public static ItemStack getDisplayItemStack(AirQualityLevel airQualityLevel) {
+        ItemStack itemStack = new ItemStack(ModRegistry.SAFETY_LANTERN_BLOCK.get());
+        itemStack.getOrCreateTag().putInt(TAG_AIR_QUALITY_LEVEL, airQualityLevel.ordinal());
+        return itemStack;
     }
 }

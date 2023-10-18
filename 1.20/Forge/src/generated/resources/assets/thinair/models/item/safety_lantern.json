@@ -1,27 +1,27 @@
 {
   "overrides": [
     {
-      "model": "thinair:item/lantern_red",
+      "model": "thinair:item/lantern_green",
       "predicate": {
-        "thinair:air_quality": 0.0
-      }
-    },
-    {
-      "model": "thinair:item/lantern_yellow",
-      "predicate": {
-        "thinair:air_quality": 1.0
+        "thinair:air_quality_level": 0.0
       }
     },
     {
       "model": "thinair:item/lantern_blue",
       "predicate": {
-        "thinair:air_quality": 2.0
+        "thinair:air_quality_level": 0.1
       }
     },
     {
-      "model": "thinair:item/lantern_green",
+      "model": "thinair:item/lantern_yellow",
       "predicate": {
-        "thinair:air_quality": 3.0
+        "thinair:air_quality_level": 0.2
+      }
+    },
+    {
+      "model": "thinair:item/lantern_red",
+      "predicate": {
+        "thinair:air_quality_level": 0.3
       }
     }
   ]

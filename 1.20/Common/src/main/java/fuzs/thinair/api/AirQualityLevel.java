@@ -1,7 +1,6 @@
 package fuzs.thinair.api;
 
 import fuzs.thinair.ThinAir;
-import fuzs.thinair.capability.AirProtectionCapability;
 import fuzs.thinair.config.CommonConfig;
 import fuzs.thinair.init.ModRegistry;
 import net.minecraft.core.registries.Registries;
@@ -81,7 +80,7 @@ public enum AirQualityLevel implements StringRepresentable {
 
         @Override
         boolean isProtected(LivingEntity entity) {
-            return MobEffectUtil.hasWaterBreathing(entity) || ModRegistry.AIR_PROTECTION_CAPABILITY.maybeGet(entity).filter(AirProtectionCapability::isProtected).isPresent();
+            return MobEffectUtil.hasWaterBreathing(entity) || entity.isUsingItem() && entity.getUseItem().is(ModRegistry.AIR_BLADDER_ITEM.get());
         }
 
         @Override
@@ -153,5 +152,9 @@ public enum AirQualityLevel implements StringRepresentable {
             if (values[i].isProtected(entity)) return 0;
         }
         return this.getConsumedAirAmount(entity);
+    }
+
+    public float getItemModelProperty() {
+        return this.ordinal() / 10.0F;
     }
 }

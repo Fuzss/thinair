@@ -110,7 +110,8 @@
     "frame": "task",
     "hidden": false,
     "icon": {
-      "item": "thinair:fake_rainbow_lantern"
+      "item": "thinair:safety_lantern",
+      "nbt": "{AirQualityLevel:2}"
     },
     "show_toast": true,
     "title": {

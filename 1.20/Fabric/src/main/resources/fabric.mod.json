@@ -43,7 +43,6 @@
     "fabric-api": ">=${minFabricApiVersion}",
     "puzzleslib": ">=${minPuzzlesVersion}",
     "cardinal-components-base": "*",
-    "cardinal-components-entity": "*",
     "cardinal-components-chunk": "*",
     "minecraft": "${minecraftVersion}",
     "java": ">=17"
@@ -51,7 +50,6 @@
 
   "custom": {
     "cardinal-components": [
-      "${modId}:air_protection",
       "${modId}:air_bubble_positions"
     ]
   }

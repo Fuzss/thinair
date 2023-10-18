@@ -22,7 +22,8 @@
     "frame": "task",
     "hidden": false,
     "icon": {
-      "item": "thinair:fake_always_green_lantern"
+      "item": "thinair:safety_lantern",
+      "nbt": "{AirQualityLevel:0}"
     },
     "show_toast": true,
     "title": {

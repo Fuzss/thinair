@@ -6,7 +6,6 @@ import fuzs.thinair.advancements.ModAdvancementTriggers;
 import fuzs.thinair.api.AirQualityHelper;
 import fuzs.thinair.api.AirQualityLevel;
 import fuzs.thinair.capability.AirBubblePositionsCapability;
-import fuzs.thinair.capability.AirProtectionCapability;
 import fuzs.thinair.config.CommonConfig;
 import fuzs.thinair.data.*;
 import fuzs.thinair.init.ForgeModRegistry;
@@ -41,7 +40,6 @@ public class ThinAirForge {
     }
 
     private static void registerCapabilities() {
-        ForgeCapabilityHelper.setCapabilityToken(ModRegistry.AIR_PROTECTION_CAPABILITY, new CapabilityToken<AirProtectionCapability>() {});
         ForgeCapabilityHelper.setCapabilityToken(ModRegistry.AIR_BUBBLE_POSITIONS_CAPABILITY, new CapabilityToken<AirBubblePositionsCapability>() {});
     }
 
@@ -68,14 +66,13 @@ public class ThinAirForge {
 
     @SubscribeEvent
     public static void onGatherData(final GatherDataEvent evt) {
-        DataGenerator dataGenerator = evt.getGenerator();
-        dataGenerator.addProvider(evt.includeServer(), new ModAdvancementProvider(evt, ThinAir.MOD_ID));
-        dataGenerator.addProvider(evt.includeServer(), new ModBlockLootProvider(evt, ThinAir.MOD_ID));
-        dataGenerator.addProvider(evt.includeClient(), new ModBlockModels(evt, ThinAir.MOD_ID));
-        dataGenerator.addProvider(evt.includeServer(), new ModBlockTagsProvider(evt, ThinAir.MOD_ID));
-        dataGenerator.addProvider(evt.includeServer(), new ModChestLootProvider(evt, ThinAir.MOD_ID));
-        dataGenerator.addProvider(evt.includeServer(), new ModEntityTypeTagsProvider(evt, ThinAir.MOD_ID));
-        dataGenerator.addProvider(evt.includeServer(), new ModItemTagsProvider(evt, ThinAir.MOD_ID));
-        dataGenerator.addProvider(evt.includeServer(), new ModRecipeProvider(evt, ThinAir.MOD_ID));
+        evt.getGenerator().addProvider(true, new ModAdvancementProvider(evt, ThinAir.MOD_ID));
+        evt.getGenerator().addProvider(true, new ModBlockLootProvider(evt, ThinAir.MOD_ID));
+        evt.getGenerator().addProvider(evt.includeClient(), new ModModelProvider(evt, ThinAir.MOD_ID));
+        evt.getGenerator().addProvider(true, new ModBlockTagsProvider(evt, ThinAir.MOD_ID));
+        evt.getGenerator().addProvider(true, new ModChestLootProvider(evt, ThinAir.MOD_ID));
+        evt.getGenerator().addProvider(true, new ModEntityTypeTagsProvider(evt, ThinAir.MOD_ID));
+        evt.getGenerator().addProvider(true, new ModItemTagsProvider(evt, ThinAir.MOD_ID));
+        evt.getGenerator().addProvider(true, new ModRecipeProvider(evt, ThinAir.MOD_ID));
     }
 }

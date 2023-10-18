@@ -7,8 +7,8 @@ import net.minecraft.world.item.ItemStack;
 
 public class AirBladderFabricItem extends AirBladderItem implements FabricItem {
 
-    public AirBladderFabricItem(Properties pProperties) {
-        super(pProperties);
+    public AirBladderFabricItem(Properties properties) {
+        super(properties);
     }
 
     @Override
