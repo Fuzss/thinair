@@ -2,11 +2,10 @@ package fuzs.thinair.data;
 
 import com.mojang.datafixers.util.Either;
 import fuzs.thinair.advancements.AirProtectionSource;
-import fuzs.thinair.advancements.AirSource;
 import fuzs.thinair.advancements.criterion.BreatheAirTrigger;
 import fuzs.thinair.advancements.criterion.SignalificateTorchTrigger;
 import fuzs.thinair.advancements.criterion.UseSoulfireBecauseItDoesntTriggerVanillaForSomeReasonTrigger;
-import fuzs.thinair.helper.AirQualityLevel;
+import fuzs.thinair.api.AirQualityLevel;
 import fuzs.thinair.init.ModRegistry;
 import net.minecraft.advancements.*;
 import net.minecraft.advancements.critereon.*;
@@ -37,17 +36,17 @@ public class ModAdvancementProvider extends AbstractAdvancementProvider {
 
     @Override
     public void generate(HolderLookup.Provider registries, Consumer<Advancement> exporter, ExistingFileHelper fileHelper) {
-        Advancement root = Advancement.Builder.advancement().display(this.simpleWithBackground(ModRegistry.FAKE_ALWAYS_RED_LANTERN_ITEM.get(), "root", FrameType.TASK, new ResourceLocation("textures/block/deepslate.png"))).addCriterion("bad_air", new BreatheAirTrigger.Instance(ContextAwarePredicate.ANY, EnumSet.of(AirQualityLevel.YELLOW, AirQualityLevel.RED), null, null)).save(exporter, this.prefix("root"));
+        Advancement root = Advancement.Builder.advancement().display(this.simpleWithBackground(ModRegistry.FAKE_ALWAYS_RED_LANTERN_ITEM.get(), "root", FrameType.TASK, new ResourceLocation("textures/block/deepslate.png"))).addCriterion("bad_air", new BreatheAirTrigger.Instance(ContextAwarePredicate.ANY, EnumSet.of(AirQualityLevel.YELLOW, AirQualityLevel.RED), null)).save(exporter, this.prefix("root"));
 
-        Advancement bladder = Advancement.Builder.advancement().display(this.simple(ModRegistry.AIR_BLADDER_ITEM.get(), "air_bladder", FrameType.TASK)).parent(root).addCriterion("bad_air", new BreatheAirTrigger.Instance(ContextAwarePredicate.ANY, EnumSet.of(AirQualityLevel.YELLOW, AirQualityLevel.RED), null, Either.left(AirProtectionSource.BLADDER))).save(exporter, this.prefix("air_bladder"));
+        Advancement bladder = Advancement.Builder.advancement().display(this.simple(ModRegistry.AIR_BLADDER_ITEM.get(), "air_bladder", FrameType.TASK)).parent(root).addCriterion("bad_air", new BreatheAirTrigger.Instance(ContextAwarePredicate.ANY, EnumSet.of(AirQualityLevel.YELLOW, AirQualityLevel.RED), Either.left(AirProtectionSource.BLADDER))).save(exporter, this.prefix("air_bladder"));
 
-        Advancement soul = Advancement.Builder.advancement().display(this.simple(Items.SOUL_CAMPFIRE, "soul", FrameType.TASK)).parent(bladder).addCriterion("bad_air", new BreatheAirTrigger.Instance(ContextAwarePredicate.ANY, EnumSet.allOf(AirQualityLevel.class), AirSource.SOUL, null)).save(exporter, this.prefix("soul"));
+        Advancement soul = Advancement.Builder.advancement().display(this.simple(Items.SOUL_CAMPFIRE, "soul", FrameType.TASK)).parent(bladder).addCriterion("bad_air", new BreatheAirTrigger.Instance(ContextAwarePredicate.ANY, EnumSet.of(AirQualityLevel.BLUE), null)).save(exporter, this.prefix("soul"));
 
         Advancement.Builder.advancement().display(this.simple(ModRegistry.SOULFIRE_BOTTLE_ITEM.get(), "soulfire_bottle", FrameType.GOAL)).parent(soul).addCriterion("on_use", new UseSoulfireBecauseItDoesntTriggerVanillaForSomeReasonTrigger.Instance(ContextAwarePredicate.ANY)).save(exporter, this.prefix("soulfire_bottle"));
 
-        Advancement protectYellow = Advancement.Builder.advancement().display(this.simple(ModRegistry.RESPIRATOR_ITEM.get(), "protection_from_yellow", FrameType.TASK)).parent(root).addCriterion("protecc", new BreatheAirTrigger.Instance(ContextAwarePredicate.ANY, EnumSet.of(AirQualityLevel.YELLOW, AirQualityLevel.RED), null, null)).save(exporter, this.prefix("protection_from_yellow"));
+        Advancement protectYellow = Advancement.Builder.advancement().display(this.simple(ModRegistry.RESPIRATOR_ITEM.get(), "protection_from_yellow", FrameType.TASK)).parent(root).addCriterion("protecc", new BreatheAirTrigger.Instance(ContextAwarePredicate.ANY, EnumSet.of(AirQualityLevel.YELLOW, AirQualityLevel.RED), null)).save(exporter, this.prefix("protection_from_yellow"));
 
-        Advancement.Builder.advancement().display(new DisplayInfo(PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.WATER_BREATHING), Component.translatable("advancement." + this.modId + ":protection_from_red"), Component.translatable("advancement." + this.modId + ":protection_from_red.desc"), null, FrameType.GOAL, true, true, false)).parent(protectYellow).addCriterion("protecc", new BreatheAirTrigger.Instance(ContextAwarePredicate.ANY, EnumSet.of(AirQualityLevel.RED), null, Either.right(Unit.INSTANCE))).save(exporter, this.prefix("protection_from_red"));
+        Advancement.Builder.advancement().display(new DisplayInfo(PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.WATER_BREATHING), Component.translatable("advancement." + this.modId + ":protection_from_red"), Component.translatable("advancement." + this.modId + ":protection_from_red.desc"), null, FrameType.GOAL, true, true, false)).parent(protectYellow).addCriterion("protecc", new BreatheAirTrigger.Instance(ContextAwarePredicate.ANY, EnumSet.of(AirQualityLevel.RED), Either.right(Unit.INSTANCE))).save(exporter, this.prefix("protection_from_red"));
 
         Advancement lantern = Advancement.Builder.advancement().display(this.simple(ModRegistry.FAKE_ALWAYS_GREEN_LANTERN_ITEM.get(), "lantern", FrameType.TASK)).parent(root).addCriterion("place", new InventoryChangeTrigger.TriggerInstance(ContextAwarePredicate.ANY, MinMaxBounds.Ints.ANY, MinMaxBounds.Ints.ANY, MinMaxBounds.Ints.ANY, new ItemPredicate[]{ItemPredicate.Builder.item().of(ModRegistry.SAFETY_LANTERN_BLOCK.get()).build()})).save(exporter, this.prefix("lantern"));
 

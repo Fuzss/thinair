@@ -4,12 +4,8 @@
     "bad_air": {
       "conditions": {
         "air_qualities": [
-          "green",
-          "blue",
-          "yellow",
-          "red"
-        ],
-        "air_source": "soul"
+          "blue"
+        ]
       },
       "trigger": "thinair:breathe_bad_air"
     }

@@ -1,12 +1,10 @@
 package fuzs.thinair.handler;
 
-import com.mojang.datafixers.util.Pair;
 import fuzs.puzzleslib.api.event.v1.core.EventResult;
 import fuzs.thinair.advancements.AirProtectionSource;
-import fuzs.thinair.advancements.AirSource;
 import fuzs.thinair.advancements.ModAdvancementTriggers;
 import fuzs.thinair.helper.AirHelper;
-import fuzs.thinair.helper.AirQualityLevel;
+import fuzs.thinair.api.AirQualityLevel;
 import fuzs.thinair.init.ModRegistry;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerPlayer;
@@ -20,9 +18,9 @@ public class TickAirChecker {
 
     public static EventResult onLivingTick(LivingEntity entity) {
 
-        Pair<AirQualityLevel, AirSource> o2Pair = AirHelper.getO2LevelFromLocation(entity.getEyePosition(), entity.level());
+        AirQualityLevel airQualityLevel = AirHelper.getAirQualityAtLocation(entity.getEyePosition(), entity.level());
         int deltaO2 = 0;
-        AirProtectionSource protection = switch (o2Pair.getFirst()) {
+        AirProtectionSource protection = switch (airQualityLevel) {
             case GREEN -> {
                 deltaO2 = 4;
                 yield AirProtectionSource.NONE;
@@ -62,7 +60,7 @@ public class TickAirChecker {
         };
 
         if (entity instanceof ServerPlayer splayer) {
-            ModAdvancementTriggers.BREATHE_AIR.trigger(splayer, o2Pair.getFirst(), o2Pair.getSecond(), protection);
+            ModAdvancementTriggers.BREATHE_AIR.trigger(splayer, airQualityLevel, protection);
         }
 
         if (deltaO2 != 0) {

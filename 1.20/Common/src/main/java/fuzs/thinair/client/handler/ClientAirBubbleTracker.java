@@ -1,5 +1,6 @@
 package fuzs.thinair.client.handler;
 
+import com.google.common.collect.Queues;
 import fuzs.thinair.capability.AirBubblePositionsCapability;
 import fuzs.thinair.handler.AirBubbleTracker;
 import fuzs.thinair.init.ModRegistry;
@@ -15,8 +16,7 @@ import java.util.Deque;
 import java.util.Optional;
 
 public class ClientAirBubbleTracker {
-    // Two lists because in a singleplayer world these will be on the same JVM
-    private static final Deque<ChunkPos> CLIENT_CHUNKS_TO_SCAN = new ArrayDeque<>();
+    private static final Deque<ChunkPos> CLIENT_CHUNKS_TO_SCAN = Queues.synchronizedDeque(new ArrayDeque<>());
 
     public static void onChunkLoad(LevelAccessor level, ChunkAccess chunk) {
         ChunkPos chunkpos = chunk.getPos();
@@ -33,13 +33,13 @@ public class ClientAirBubbleTracker {
             if (chunk != null) {
                 Optional<AirBubblePositionsCapability> maybeCap = ModRegistry.AIR_BUBBLE_POSITIONS_CAPABILITY.maybeGet(chunk);
                 if (maybeCap.isPresent()) {
-                    AirBubblePositionsCapability cap = maybeCap.get();
-                    if (cap.getSkipCountLeft() >= 0) {
-                        AirBubbleTracker.recalcChunk(chunk, cap.getEntries());
+                    AirBubblePositionsCapability capability = maybeCap.get();
+                    if (capability.getSkipCountLeft() >= 0) {
+                        AirBubbleTracker.recalculateChunk(chunk, capability.getAirBubbleEntries());
                         chunk.setUnsaved(true);
-                        cap.setSkipCountLeft(8);
+                        capability.setSkipCountLeft(8);
                     } else {
-                        cap.setSkipCountLeft(cap.getSkipCountLeft() - 1);
+                        capability.setSkipCountLeft(capability.getSkipCountLeft() - 1);
                     }
                 }
             }

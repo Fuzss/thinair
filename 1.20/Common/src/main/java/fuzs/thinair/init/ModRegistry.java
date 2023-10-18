@@ -17,6 +17,8 @@ import fuzs.thinair.world.level.block.WallSignalTorchBlock;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -38,6 +40,8 @@ public class ModRegistry {
     public static final RegistryReference<Item> FAKE_ALWAYS_YELLOW_LANTERN_ITEM = REGISTRY.registerItem("fake_always_yellow_lantern", () -> new Item(new Item.Properties()));
     public static final RegistryReference<Item> FAKE_ALWAYS_GREEN_LANTERN_ITEM = REGISTRY.registerItem("fake_always_green_lantern", () -> new Item(new Item.Properties()));
     public static final RegistryReference<Item> FAKE_RAINBOW_LANTERN_ITEM = REGISTRY.registerItem("fake_rainbow_lantern", () -> new Item(new Item.Properties()));
+
+    public static final TagKey<EntityType<?>> AIR_QUALITY_SENSITIVE_ENTITY_TYPE_TAG = REGISTRY.registerEntityTypeTag("air_quality_sensitive");
     
     static final CapabilityController CAPABILITIES = CapabilityController.from(ThinAir.MOD_ID);
     public static final CapabilityKey<AirProtectionCapability> AIR_PROTECTION_CAPABILITY = CAPABILITIES.registerEntityCapability("air_protection", AirProtectionCapability.class, o -> new AirProtectionCapabilityImpl(), LivingEntity.class);

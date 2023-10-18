@@ -2,7 +2,7 @@ package fuzs.thinair.config;
 
 import com.mojang.datafixers.util.Pair;
 import fuzs.thinair.ThinAir;
-import fuzs.thinair.helper.AirQualityLevel;
+import fuzs.thinair.api.AirQualityLevel;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.ForgeConfigSpec;
 import org.jetbrains.annotations.Nullable;
@@ -18,16 +18,15 @@ public class CommonConfig {
     }
 
     public static ForgeConfigSpec.ConfigValue<List<? extends String>> dimensions;
-    public static ForgeConfigSpec.ConfigValue<List<? extends String>> alwaysBreathingEntities;
+    public static ForgeConfigSpec.ConfigValue<List<? extends String>> entitiesAffectedByAirQuality;
 
     public static ForgeConfigSpec.BooleanValue enableSignalTorches;
     public static ForgeConfigSpec.IntValue drownedChoking;
 
-    public static ForgeConfigSpec.DoubleValue soulFireRange;
-    public static ForgeConfigSpec.DoubleValue soulCampfireRange;
-    public static ForgeConfigSpec.DoubleValue soulTorchRange;
-    public static ForgeConfigSpec.DoubleValue lavaRange;
-    public static ForgeConfigSpec.DoubleValue netherPortalRange;
+    public static ForgeConfigSpec.DoubleValue blueAirProviderRadius;
+    public static ForgeConfigSpec.DoubleValue redAirProviderRadius;
+    public static ForgeConfigSpec.DoubleValue yellowAirProviderRadius;
+    public static ForgeConfigSpec.DoubleValue greenAirProviderRadius;
 
     private static Map<ResourceLocation, DimensionEntry> dimensionEntries = null;
 
@@ -45,24 +44,16 @@ public class CommonConfig {
                 "minecraft:the_end=red"
             ), o -> o instanceof String s && parseDimensionLine(s) != null);
 
-        alwaysBreathingEntities = builder
-            .comment("Entities that can always breathe.",
-                "This is in addition to entities where `.canBreatheUnderwater()` returns true (so, fish and undead),",
-                "and invulnerable players.")
-            .defineList("alwaysBreathingEntities", Arrays.asList(
-                "minecraft:armor_stand",
-                "minecraft:enderman",
-                "minecraft:endermite",
-                "minecraft:shulker",
-                "minecraft:strider",
-                "minecraft:ghast",
-                "minecraft:piglin",
-                "minecraft:hoglin",
-                "minecraft:piglin_brute",
-                "minecraft:blaze",
-                "minecraft:magma_cube",
-                "minecraft:ender_dragon",
-                "minecraft:wither"
+        entitiesAffectedByAirQuality = builder
+            .comment("Entities that are affected by air quality and will loose air when in an area with bad air.")
+            .defineList("entitiesAffectedByAirQuality", Arrays.asList(
+                    "minecraft:player",
+                    "minecraft:villager",
+                    "minecraft:villager",
+                    "minecraft:wandering_trader",
+                    "minecraft:pillager",
+                    "minecraft:evoker",
+                    "minecraft:vindicator"
             ), o -> o instanceof String s && ResourceLocation.isValidResourceLocation(s));
 
         enableSignalTorches = builder
@@ -74,21 +65,18 @@ public class CommonConfig {
             .defineInRange("drownedChoking", 100, Integer.MIN_VALUE, Integer.MAX_VALUE);
 
         builder.push("Ranges");
-        soulTorchRange = builder
-            .comment("The radius a soul torch projects a bubble of blue air around it")
-            .defineInRange("soulTorchRange", 2.0, 0.0, 32.0);
-        soulFireRange = builder
-            .comment("The radius a soul fire projects a bubble of blue air around it")
-            .defineInRange("soulFireRange", 5.0, 0.0, 32.0);
-        soulCampfireRange = builder
-            .comment("The radius a soul campfire projects a bubble of blue air around it")
-            .defineInRange("soulCampfireRange", 9.0, 0.0, 32.0);
-        lavaRange = builder
-            .comment("The radius lava blocks project a bubble of red air around it")
-            .defineInRange("lavaRange", 5.0, 0.0, 32.0);
-        netherPortalRange = builder
-            .comment("The radius nether portal blocks project a bubble of green air around it")
-            .defineInRange("netherPortalRange", 5.0, 0.0, 32.0);
+        yellowAirProviderRadius = builder
+                .comment("The radius in which all blocks defined in the yellow air providers tag project a bubble of air around them.")
+            .defineInRange("yellowAirProviderRadius", 6.0, 1.0, 32.0);
+        blueAirProviderRadius = builder
+            .comment("The radius in which all blocks defined in the blue air providers tag (usually soul fire related blocks) project a bubble of air around them.")
+            .defineInRange("blueAirProviderRadius", 6.0, 1.0, 32.0);
+        redAirProviderRadius = builder
+                .comment("The radius in which all blocks defined in the red air providers tag (usually lava related blocks) project a bubble of air around them.")
+            .defineInRange("redAirProviderRadius", 3.0, 1.0, 32.0);
+        greenAirProviderRadius = builder
+                .comment("The radius in which all blocks defined in the green air providers tag (usually various portal blocks) project a bubble of air around them.")
+            .defineInRange("greenAirProviderRadius", 9.0, 1.0, 32.0);
         builder.pop();
     }
 

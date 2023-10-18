@@ -2,7 +2,7 @@ package fuzs.thinair.capability;
 
 import com.google.common.collect.Maps;
 import fuzs.thinair.helper.AirBubble;
-import fuzs.thinair.helper.AirQualityLevel;
+import fuzs.thinair.api.AirQualityLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.*;
 
@@ -17,18 +17,21 @@ public class AirBubblePositionsCapabilityImpl implements AirBubblePositionsCapab
     public static final String TAG_POSITIONS = "positions", TAG_QUALITY = "air_quality", TAG_RADIUS = "radius";
     public static final String TAG_SKIP_COUNT_LEFT = "skip_count_left";
 
-    private Map<BlockPos, AirBubble> entries = Maps.newHashMap();
+    private Map<BlockPos, AirBubble> airBubbleEntries = Maps.newHashMap();
     // Number of times we will skip rescanning this.
     private int skipCountLeft;
 
-    public Map<BlockPos, AirBubble> getEntries() {
-        return this.entries;
+    @Override
+    public Map<BlockPos, AirBubble> getAirBubbleEntries() {
+        return this.airBubbleEntries;
     }
 
+    @Override
     public int getSkipCountLeft() {
         return this.skipCountLeft;
     }
 
+    @Override
     public void setSkipCountLeft(int skipCountLeft) {
         this.skipCountLeft = skipCountLeft;
     }
@@ -36,14 +39,14 @@ public class AirBubblePositionsCapabilityImpl implements AirBubblePositionsCapab
     @Override
     public void write(CompoundTag tag) {
         ListTag positions = new ListTag();
-        byte[] qualitiesArr = new byte[this.entries.size()];
-        long[] radiusesArr = new long[this.entries.size()];
+        byte[] qualitiesArr = new byte[this.airBubbleEntries.size()];
+        long[] radiusesArr = new long[this.airBubbleEntries.size()];
 
         int i = 0;
-        for (BlockPos pos : this.entries.keySet()) {
-            AirBubble entry = this.entries.get(pos);
+        for (BlockPos pos : this.airBubbleEntries.keySet()) {
+            AirBubble entry = this.airBubbleEntries.get(pos);
             positions.add(NbtUtils.writeBlockPos(pos));
-            qualitiesArr[i] = (byte) entry.airQuality().ordinal();
+            qualitiesArr[i] = (byte) entry.airQualityLevel().ordinal();
             radiusesArr[i] = Double.doubleToRawLongBits(entry.radius());
             i++;
         }
@@ -61,9 +64,9 @@ public class AirBubblePositionsCapabilityImpl implements AirBubblePositionsCapab
         byte[] qualities = tag.getByteArray(TAG_QUALITY);
         long[] radiuses = tag.getLongArray(TAG_RADIUS);
 
-        this.entries = new HashMap<>(positions.size());
+        this.airBubbleEntries = new HashMap<>(positions.size());
         for (int i = 0; i < positions.size(); i++) {
-            this.entries.put(NbtUtils.readBlockPos(positions.getCompound(i)),
+            this.airBubbleEntries.put(NbtUtils.readBlockPos(positions.getCompound(i)),
                     new AirBubble(AirQualityLevel.values()[qualities[i]], Double.longBitsToDouble(radiuses[i])));
         }
 

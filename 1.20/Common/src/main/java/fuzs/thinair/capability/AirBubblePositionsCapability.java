@@ -8,7 +8,7 @@ import java.util.Map;
 
 public interface AirBubblePositionsCapability extends CapabilityComponent {
 
-    Map<BlockPos, AirBubble> getEntries();
+    Map<BlockPos, AirBubble> getAirBubbleEntries();
 
     int getSkipCountLeft();
 

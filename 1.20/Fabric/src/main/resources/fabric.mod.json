@@ -16,7 +16,7 @@
     "sources": "${modPageUrl}"
   },
 
-  "license": "MIT",
+  "license": "${modLicense}",
   "icon": "mod_logo.png",
 
   "environment": "${modFabricEnvironment}",

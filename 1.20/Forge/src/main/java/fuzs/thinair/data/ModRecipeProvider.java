@@ -4,7 +4,7 @@ import com.mojang.datafixers.util.Either;
 import fuzs.puzzleslib.api.data.v1.AbstractRecipeProvider;
 import fuzs.thinair.advancements.AirProtectionSource;
 import fuzs.thinair.advancements.criterion.BreatheAirTrigger;
-import fuzs.thinair.helper.AirQualityLevel;
+import fuzs.thinair.api.AirQualityLevel;
 import fuzs.thinair.init.ModRegistry;
 import net.minecraft.advancements.critereon.ChangeDimensionTrigger;
 import net.minecraft.advancements.critereon.ContextAwarePredicate;
@@ -30,8 +30,7 @@ public class ModRecipeProvider extends AbstractRecipeProvider {
     @Override
     protected void buildRecipes(Consumer<FinishedRecipe> exporter) {
         BreatheAirTrigger.Instance yellowTrigger = new BreatheAirTrigger.Instance(ContextAwarePredicate.ANY,
-            EnumSet.of(AirQualityLevel.YELLOW, AirQualityLevel.RED), null,
-            Either.left(AirProtectionSource.NONE));
+            EnumSet.of(AirQualityLevel.YELLOW, AirQualityLevel.RED), Either.left(AirProtectionSource.NONE));
         ChangeDimensionTrigger.TriggerInstance netherTrigger = ChangeDimensionTrigger.TriggerInstance.changedDimensionTo(Level.NETHER);
 
 

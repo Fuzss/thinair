@@ -6,8 +6,7 @@ import com.google.gson.JsonObject;
 import com.mojang.datafixers.util.Either;
 import fuzs.thinair.ThinAir;
 import fuzs.thinair.advancements.AirProtectionSource;
-import fuzs.thinair.advancements.AirSource;
-import fuzs.thinair.helper.AirQualityLevel;
+import fuzs.thinair.api.AirQualityLevel;
 import net.minecraft.advancements.critereon.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -31,8 +30,7 @@ public class BreatheAirTrigger extends SimpleCriterionTrigger<BreatheAirTrigger.
     }
 
     @Override
-    protected Instance createInstance(JsonObject json, ContextAwarePredicate predicate,
-        DeserializationContext ctx) {
+    protected Instance createInstance(JsonObject json, ContextAwarePredicate predicate, DeserializationContext ctx) {
 
         var allowedQualities = EnumSet.noneOf(AirQualityLevel.class);
         for (var qualObj : json.getAsJsonArray(TAG_AIR_QUALITIES)) {
@@ -48,35 +46,24 @@ public class BreatheAirTrigger extends SimpleCriterionTrigger<BreatheAirTrigger.
                 protection = Either.left(AirProtectionSource.valueOf(protectionStr.toUpperCase(Locale.ROOT)));
             }
         }
-        AirSource source = null;
-        if (json.has(TAG_AIR_SOURCE) && !json.get(TAG_AIR_SOURCE).isJsonNull()) {
-            var sourceStr = GsonHelper.getAsString(json, TAG_AIR_SOURCE);
-            source = AirSource.valueOf(sourceStr.toUpperCase(Locale.ROOT));
-        }
-        return new Instance(predicate, allowedQualities, source, protection);
+        return new Instance(predicate, allowedQualities, protection);
     }
 
-    public void trigger(ServerPlayer player, AirQualityLevel qualityBreathed, AirSource source,
-        AirProtectionSource protection) {
-        super.trigger(player, inst -> inst.test(qualityBreathed, source, protection));
+    public void trigger(ServerPlayer player, AirQualityLevel qualityBreathed, AirProtectionSource protection) {
+        super.trigger(player, inst -> inst.test(qualityBreathed, protection));
     }
 
     public static class Instance extends AbstractCriterionTriggerInstance {
         protected final EnumSet<AirQualityLevel> allowedQualities;
-        // Null = I don't care
-        @Nullable
-        protected final AirSource airSource;
         // APS = this specific source
         // Unit = any existent source (serialized as "any")
         // Null = don't care
         @Nullable
         protected final Either<AirProtectionSource, Unit> protection;
 
-        public Instance(ContextAwarePredicate predicate, EnumSet<AirQualityLevel> allowedQualities,
-            @Nullable AirSource airSource, @Nullable Either<AirProtectionSource, Unit> protection) {
+        public Instance(ContextAwarePredicate predicate, EnumSet<AirQualityLevel> allowedQualities, @Nullable Either<AirProtectionSource, Unit> protection) {
             super(ID, predicate);
             this.allowedQualities = allowedQualities;
-            this.airSource = airSource;
             this.protection = protection;
         }
 
@@ -94,15 +81,8 @@ public class BreatheAirTrigger extends SimpleCriterionTrigger<BreatheAirTrigger.
                 qualities.add(qual.getSerializedName());
             }
             json.add(TAG_AIR_QUALITIES, qualities);
-            if (this.airSource != null) {
-                json.addProperty(TAG_AIR_SOURCE, this.airSource.toString().toLowerCase(Locale.ROOT));
-            } else {
-                json.add(TAG_AIR_SOURCE, JsonNull.INSTANCE);
-            }
             if (this.protection != null) {
-                var str = this.protection.map(
-                    aps -> aps.toString().toLowerCase(Locale.ROOT),
-                    unit -> "any");
+                var str = this.protection.map(aps -> aps.toString().toLowerCase(Locale.ROOT), unit -> "any");
                 json.addProperty(TAG_PROTECTION, str);
             } else {
                 json.add(TAG_PROTECTION, JsonNull.INSTANCE);
@@ -110,11 +90,8 @@ public class BreatheAirTrigger extends SimpleCriterionTrigger<BreatheAirTrigger.
             return json;
         }
 
-        private boolean test(AirQualityLevel qualityBreathed, AirSource source, AirProtectionSource protection) {
-            return this.allowedQualities.contains(qualityBreathed)
-                && (this.airSource == null || this.airSource == source)
-                && (this.protection == null || this.protection.map(aps -> aps == protection,
-                unit -> protection != AirProtectionSource.NONE));
+        private boolean test(AirQualityLevel qualityBreathed, AirProtectionSource protection) {
+            return this.allowedQualities.contains(qualityBreathed) && (this.protection == null || this.protection.map(aps -> aps == protection, unit -> protection != AirProtectionSource.NONE));
         }
     }
 }

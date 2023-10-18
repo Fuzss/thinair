@@ -2,7 +2,7 @@ package fuzs.thinair.world.item;
 
 import fuzs.thinair.capability.AirProtectionCapability;
 import fuzs.thinair.helper.AirHelper;
-import fuzs.thinair.helper.AirQualityLevel;
+import fuzs.thinair.api.AirQualityLevel;
 import fuzs.thinair.init.ModRegistry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
@@ -22,7 +22,7 @@ import java.util.Optional;
 public class AirBladderItem extends Item {
     // We have to cache the air quality on the item in order to get the animations
     // because getUseAnimation doesn't provide the player
-    private static final String TAG_OXYGEN_LEVEL = "oxygenLevel";
+    private static final String TAG_OXYGEN_LEVEL = "OxygenLevel";
 
     public AirBladderItem(Properties pProperties) {
         super(pProperties);
@@ -37,7 +37,7 @@ public class AirBladderItem extends Item {
 
     @Override
     public void onUseTick(Level level, LivingEntity livingEntity, ItemStack stack, int remainingUseDuration) {
-        AirQualityLevel o2Level = AirHelper.getO2LevelFromLocation(livingEntity.getEyePosition(), livingEntity.level()).getFirst();
+        AirQualityLevel o2Level = AirHelper.getAirQualityAtLocation(livingEntity.getEyePosition(), livingEntity.level());
         stack.getOrCreateTag().putString(TAG_OXYGEN_LEVEL, o2Level.toString());
 
         ServerPlayer maybeSplayer = null;

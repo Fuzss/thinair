@@ -34,7 +34,7 @@ public class ThinAirClient implements ClientModConstructor {
         context.registerItemProperty(ThinAir.id("air_quality"), (ItemStack stack, ClientLevel level, LivingEntity maybeEntity, int seed) -> {
             var entity = maybeEntity != null ? maybeEntity : stack.getEntityRepresentation();
             if (entity != null) {
-                return switch (AirHelper.getO2LevelFromLocation(entity.getEyePosition(), entity.level()).getFirst()) {
+                return switch (AirHelper.getAirQualityAtLocation(entity.getEyePosition(), entity.level())) {
                     case RED -> 0;
                     case YELLOW -> 1;
                     case BLUE -> 2;

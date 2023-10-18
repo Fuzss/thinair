@@ -6,7 +6,6 @@
   "refmap": "thinair.refmap.json",
   "plugin": "fuzs.thinair.mixin.ModMixinConfigPlugin",
   "mixins": [
-    "LivingEntityMixin",
     "ServerLevelMixin"
   ],
   "client": [
