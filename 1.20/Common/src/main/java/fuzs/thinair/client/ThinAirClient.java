@@ -7,8 +7,9 @@ import fuzs.puzzleslib.api.client.event.v1.ClientChunkEvents;
 import fuzs.puzzleslib.api.client.event.v1.ClientLevelEvents;
 import fuzs.puzzleslib.api.client.event.v1.ClientLevelTickEvents;
 import fuzs.thinair.ThinAir;
+import fuzs.thinair.api.AirQualityHelper;
 import fuzs.thinair.client.handler.ClientAirBubbleTracker;
-import fuzs.thinair.helper.AirHelper;
+import fuzs.thinair.helper.AirQualityHelperImpl;
 import fuzs.thinair.init.ModRegistry;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.RenderType;
@@ -34,7 +35,7 @@ public class ThinAirClient implements ClientModConstructor {
         context.registerItemProperty(ThinAir.id("air_quality"), (ItemStack stack, ClientLevel level, LivingEntity maybeEntity, int seed) -> {
             var entity = maybeEntity != null ? maybeEntity : stack.getEntityRepresentation();
             if (entity != null) {
-                return switch (AirHelper.getAirQualityAtLocation(entity.getEyePosition(), entity.level())) {
+                return switch (AirQualityHelper.INSTANCE.getAirQualityAtLocation(entity.level(), entity.getEyePosition())) {
                     case RED -> 0;
                     case YELLOW -> 1;
                     case BLUE -> 2;

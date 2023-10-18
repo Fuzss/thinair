@@ -1,8 +1,8 @@
 package fuzs.thinair.world.item;
 
-import fuzs.thinair.capability.AirProtectionCapability;
-import fuzs.thinair.helper.AirHelper;
+import fuzs.thinair.api.AirQualityHelper;
 import fuzs.thinair.api.AirQualityLevel;
+import fuzs.thinair.capability.AirProtectionCapability;
 import fuzs.thinair.init.ModRegistry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
@@ -37,7 +37,7 @@ public class AirBladderItem extends Item {
 
     @Override
     public void onUseTick(Level level, LivingEntity livingEntity, ItemStack stack, int remainingUseDuration) {
-        AirQualityLevel o2Level = AirHelper.getAirQualityAtLocation(livingEntity.getEyePosition(), livingEntity.level());
+        AirQualityLevel o2Level = AirQualityHelper.INSTANCE.getAirQualityAtLocation(livingEntity.level(), livingEntity.getEyePosition());
         stack.getOrCreateTag().putString(TAG_OXYGEN_LEVEL, o2Level.toString());
 
         ServerPlayer maybeSplayer = null;

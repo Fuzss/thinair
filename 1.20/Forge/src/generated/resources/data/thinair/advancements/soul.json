@@ -1,9 +1,9 @@
 {
-  "parent": "thinair:air_bladder",
+  "parent": "thinair:root",
   "criteria": {
     "bad_air": {
       "conditions": {
-        "air_qualities": [
+        "AirQualities": [
           "blue"
         ]
       },

@@ -1,6 +1,6 @@
 package fuzs.thinair.mixin.client;
 
-import fuzs.thinair.handler.AirBubbleTracker;
+import fuzs.thinair.handler.ServerAirBubbleTracker;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
@@ -24,7 +24,7 @@ abstract class ClientLevelMixin extends Level {
 
     @Override
     public void onBlockStateChange(BlockPos pos, BlockState blockState, BlockState newState) {
-        AirBubbleTracker.onBlockChanged(this, pos, blockState, newState);
+        ServerAirBubbleTracker.onBlockChanged(this, pos, blockState, newState);
         super.onBlockStateChange(pos, blockState, newState);
     }
 }

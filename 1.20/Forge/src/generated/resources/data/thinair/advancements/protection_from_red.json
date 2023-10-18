@@ -3,10 +3,9 @@
   "criteria": {
     "protecc": {
       "conditions": {
-        "air_qualities": [
+        "AirQualities": [
           "red"
-        ],
-        "protection": "any"
+        ]
       },
       "trigger": "thinair:breathe_bad_air"
     }

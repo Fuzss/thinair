@@ -3,15 +3,16 @@ package fuzs.thinair.capability;
 import net.minecraft.nbt.CompoundTag;
 
 public class AirProtectionCapabilityImpl implements AirProtectionCapability {
-    public static final String CAP_NAME = "is_protected_from_bad_air";
     public static final String TAG_IS_USING_BLADDER = "is_using_bladder";
 
     private boolean isUsingBladder;
 
+    @Override
     public boolean isProtected() {
         return this.isUsingBladder;
     }
 
+    @Override
     public void setProtected(boolean usingBladder) {
         this.isUsingBladder = usingBladder;
     }

@@ -41,6 +41,7 @@ public class ModRegistry {
     public static final RegistryReference<Item> FAKE_ALWAYS_GREEN_LANTERN_ITEM = REGISTRY.registerItem("fake_always_green_lantern", () -> new Item(new Item.Properties()));
     public static final RegistryReference<Item> FAKE_RAINBOW_LANTERN_ITEM = REGISTRY.registerItem("fake_rainbow_lantern", () -> new Item(new Item.Properties()));
 
+    public static final TagKey<Item> BREATHING_UTILITY_ITEM_TAG = REGISTRY.registerItemTag("breathing_utility");
     public static final TagKey<EntityType<?>> AIR_QUALITY_SENSITIVE_ENTITY_TYPE_TAG = REGISTRY.registerEntityTypeTag("air_quality_sensitive");
     
     static final CapabilityController CAPABILITIES = CapabilityController.from(ThinAir.MOD_ID);

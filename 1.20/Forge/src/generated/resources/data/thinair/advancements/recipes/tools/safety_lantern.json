@@ -9,11 +9,10 @@
     },
     "in_dangerous_air": {
       "conditions": {
-        "air_qualities": [
+        "AirQualities": [
           "yellow",
           "red"
-        ],
-        "protection": "none"
+        ]
       },
       "trigger": "thinair:breathe_bad_air"
     }

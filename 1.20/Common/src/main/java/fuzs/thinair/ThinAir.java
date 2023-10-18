@@ -2,7 +2,6 @@ package fuzs.thinair;
 
 import fuzs.puzzleslib.api.core.v1.ModConstructor;
 import fuzs.puzzleslib.api.core.v1.context.CreativeModeTabContext;
-import fuzs.puzzleslib.api.event.v1.entity.living.LivingEvents;
 import fuzs.puzzleslib.api.event.v1.entity.living.LivingHurtCallback;
 import fuzs.puzzleslib.api.event.v1.entity.player.PlayerInteractEvents;
 import fuzs.puzzleslib.api.event.v1.level.ServerChunkEvents;
@@ -10,9 +9,8 @@ import fuzs.puzzleslib.api.event.v1.level.ServerLevelEvents;
 import fuzs.puzzleslib.api.event.v1.level.ServerLevelTickEvents;
 import fuzs.puzzleslib.api.event.v1.server.LootTableLoadEvents;
 import fuzs.puzzleslib.api.item.v2.CreativeModeTabConfigurator;
-import fuzs.thinair.handler.AirBubbleTracker;
-import fuzs.thinair.handler.DrownedOxygent;
-import fuzs.thinair.handler.TickAirChecker;
+import fuzs.thinair.handler.DrownedAttackHandler;
+import fuzs.thinair.handler.ServerAirBubbleTracker;
 import fuzs.thinair.init.ModRegistry;
 import fuzs.thinair.world.level.block.SignalTorchBlock;
 import net.minecraft.resources.ResourceLocation;
@@ -50,11 +48,10 @@ public class ThinAir implements ModConstructor {
             injectLootPool(identifier, addPool, BuiltInLootTables.STRONGHOLD_CORRIDOR, ModRegistry.SAFETY_LANTERN_STRONGHOLD_LOOT_TABLE);
         });
         PlayerInteractEvents.USE_BLOCK.register(SignalTorchBlock::onUseBlock);
-        ServerChunkEvents.LOAD.register(AirBubbleTracker::onChunkUnload);
-        ServerLevelEvents.UNLOAD.register(AirBubbleTracker::onLevelUnload);
-        ServerLevelTickEvents.END.register(AirBubbleTracker::consumeReqdChunksServer);
-        LivingHurtCallback.EVENT.register(DrownedOxygent::onLivingHurt);
-        LivingEvents.TICK.register(TickAirChecker::onLivingTick);
+        ServerChunkEvents.LOAD.register(ServerAirBubbleTracker::onChunkUnload);
+        ServerLevelEvents.UNLOAD.register(ServerAirBubbleTracker::onLevelUnload);
+        ServerLevelTickEvents.END.register(ServerAirBubbleTracker::consumeReqdChunksServer);
+        LivingHurtCallback.EVENT.register(DrownedAttackHandler::onLivingHurt);
     }
 
     private static void injectLootPool(ResourceLocation identifier, Consumer<LootPool> addPool, ResourceLocation builtInLootTable, ResourceLocation injectedLootTable) {

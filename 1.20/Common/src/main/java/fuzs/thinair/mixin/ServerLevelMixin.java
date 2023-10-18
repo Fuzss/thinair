@@ -1,6 +1,6 @@
 package fuzs.thinair.mixin;
 
-import fuzs.thinair.handler.AirBubbleTracker;
+import fuzs.thinair.handler.ServerAirBubbleTracker;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.RegistryAccess;
@@ -27,6 +27,6 @@ abstract class ServerLevelMixin extends Level {
 
     @Inject(method = "onBlockStateChange", at = @At("HEAD"))
     protected void onOnBlockStateChange(BlockPos pPos, BlockState pBlockState, BlockState pNewState, CallbackInfo callback) {
-        AirBubbleTracker.onBlockChanged(this, pPos, pBlockState, pNewState);
+        ServerAirBubbleTracker.onBlockChanged(this, pPos, pBlockState, pNewState);
     }
 }

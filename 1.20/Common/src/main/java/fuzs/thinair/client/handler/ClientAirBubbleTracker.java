@@ -2,7 +2,7 @@ package fuzs.thinair.client.handler;
 
 import com.google.common.collect.Queues;
 import fuzs.thinair.capability.AirBubblePositionsCapability;
-import fuzs.thinair.handler.AirBubbleTracker;
+import fuzs.thinair.handler.ServerAirBubbleTracker;
 import fuzs.thinair.init.ModRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -35,7 +35,7 @@ public class ClientAirBubbleTracker {
                 if (maybeCap.isPresent()) {
                     AirBubblePositionsCapability capability = maybeCap.get();
                     if (capability.getSkipCountLeft() >= 0) {
-                        AirBubbleTracker.recalculateChunk(chunk, capability.getAirBubbleEntries());
+                        ServerAirBubbleTracker.recalculateChunk(chunk, capability.getAirBubblePositions());
                         chunk.setUnsaved(true);
                         capability.setSkipCountLeft(8);
                     } else {

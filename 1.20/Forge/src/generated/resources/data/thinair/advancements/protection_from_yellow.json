@@ -3,7 +3,7 @@
   "criteria": {
     "protecc": {
       "conditions": {
-        "air_qualities": [
+        "AirQualities": [
           "yellow",
           "red"
         ]

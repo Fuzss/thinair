@@ -18,7 +18,6 @@ public class CommonConfig {
     }
 
     public static ForgeConfigSpec.ConfigValue<List<? extends String>> dimensions;
-    public static ForgeConfigSpec.ConfigValue<List<? extends String>> entitiesAffectedByAirQuality;
 
     public static ForgeConfigSpec.BooleanValue enableSignalTorches;
     public static ForgeConfigSpec.IntValue drownedChoking;
@@ -44,25 +43,13 @@ public class CommonConfig {
                 "minecraft:the_end=red"
             ), o -> o instanceof String s && parseDimensionLine(s) != null);
 
-        entitiesAffectedByAirQuality = builder
-            .comment("Entities that are affected by air quality and will loose air when in an area with bad air.")
-            .defineList("entitiesAffectedByAirQuality", Arrays.asList(
-                    "minecraft:player",
-                    "minecraft:villager",
-                    "minecraft:villager",
-                    "minecraft:wandering_trader",
-                    "minecraft:pillager",
-                    "minecraft:evoker",
-                    "minecraft:vindicator"
-            ), o -> o instanceof String s && ResourceLocation.isValidResourceLocation(s));
-
         enableSignalTorches = builder
             .comment("Whether to allow right-clicking torches to make them spray particle effects")
             .define("enableSignalTorches", true);
 
         drownedChoking = builder
-            .comment("How much air a Drowned attack removes")
-            .defineInRange("drownedChoking", 100, Integer.MIN_VALUE, Integer.MAX_VALUE);
+            .comment("How much air a Drowned attack removes. Set to 0 to disable this feature.")
+            .defineInRange("drownedChoking", 100, 0, 72000);
 
         builder.push("Ranges");
         yellowAirProviderRadius = builder

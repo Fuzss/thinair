@@ -20,6 +20,7 @@ public class ModBlockTagsProvider extends AbstractTagProvider.Blocks {
         this.tag(BlockTags.WALL_POST_OVERRIDE).add(ModRegistry.SIGNAL_TORCH_BLOCK.get());
         this.tag(AirQualityLevel.BLUE.getAirProvidersTag()).add(Blocks.SOUL_CAMPFIRE, Blocks.SOUL_FIRE, Blocks.SOUL_TORCH, Blocks.SOUL_WALL_TORCH, Blocks.SOUL_LANTERN);
         this.tag(AirQualityLevel.RED.getAirProvidersTag()).add(Blocks.LAVA, Blocks.MAGMA_BLOCK);
-        this.tag(AirQualityLevel.GREEN.getAirProvidersTag()).add(Blocks.END_PORTAL, Blocks.NETHER_PORTAL);
+        this.tag(AirQualityLevel.GREEN.getAirProvidersTag()).add(Blocks.END_PORTAL, Blocks.NETHER_PORTAL, Blocks.END_GATEWAY);
+        this.tag(AirQualityLevel.YELLOW.getAirProvidersTag());
     }
 }

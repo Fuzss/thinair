@@ -1,10 +1,9 @@
-// 1.20.1	2023-10-18T15:33:38.342202	Mod Advancement Provider
-f4456eb163ed994a8044ce94495253bd898cf8ff data/thinair/advancements/air_bladder.json
+// 1.20.1	2023-10-18T21:10:15.442436	Mod Advancement Provider
 9bb1d930ad98d729943d9bc9ee690952c03618c0 data/thinair/advancements/disco_lantern.json
 e6cf1ed971cf7e69717b9774757a5938f446fbdc data/thinair/advancements/lantern.json
-5035fde50e4a1e1a687a73977ac16f1bd1d9a857 data/thinair/advancements/protection_from_red.json
-44f0dfed3190cb04b8e0e8f0fffe354d7e5071b1 data/thinair/advancements/protection_from_yellow.json
-b18e9a8575cb80234e03a2fcfd7626a745c4377a data/thinair/advancements/root.json
+2dc796e83753e51c00435baf82d261a3d98d9778 data/thinair/advancements/protection_from_red.json
+b1f3d48e30bbd4f9aefd9b811639446cacb00c95 data/thinair/advancements/protection_from_yellow.json
+1710ebe079dec28054c80d784f3e4686eaf704f2 data/thinair/advancements/root.json
 bbeb7a9954a02b0845a2e42a8604b644480b8fcd data/thinair/advancements/signal_torch.json
-d885ad9118aeeff9fa692d2de7b5f7b2e2aefe1f data/thinair/advancements/soul.json
+f3895eb479d688a231706e3a19a78e4edeeb9472 data/thinair/advancements/soul.json
 5469cf88b948820e4922b97eb0f0db3b47455e4f data/thinair/advancements/soulfire_bottle.json

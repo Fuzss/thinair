@@ -2,9 +2,8 @@ package fuzs.thinair.handler;
 
 import com.google.common.collect.Queues;
 import fuzs.thinair.ThinAir;
-import fuzs.thinair.capability.AirBubblePositionsCapability;
-import fuzs.thinair.helper.AirBubble;
 import fuzs.thinair.api.AirQualityLevel;
+import fuzs.thinair.capability.AirBubblePositionsCapability;
 import fuzs.thinair.init.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.MinecraftServer;
@@ -22,7 +21,7 @@ import java.util.Deque;
 import java.util.Map;
 import java.util.Optional;
 
-public class AirBubbleTracker {
+public class ServerAirBubbleTracker {
     private static final Deque<ChunkPos> SERVER_CHUNKS_TO_SCAN = Queues.synchronizedDeque(new ArrayDeque<>());
 
     public static void onBlockChanged(Level world, BlockPos pos, BlockState oldBlockState, BlockState newBlockState) {
@@ -33,7 +32,7 @@ public class AirBubbleTracker {
             maybeCap.ifPresent(capability -> {
                 if (AirQualityLevel.getAirQualityFromBlock(oldBlockState) != null) {
                     // need to remove this
-                    AirBubble removed = capability.getAirBubbleEntries().remove(pos);
+                    AirQualityLevel removed = capability.getAirBubblePositions().remove(pos);
                     if (removed == null) {
                         ThinAir.LOGGER.warn("Didn't remove any air bubbles at {}", pos);
                     }
@@ -42,8 +41,7 @@ public class AirBubbleTracker {
 
                 AirQualityLevel airQualityLevel = AirQualityLevel.getAirQualityFromBlock(newBlockState);
                 if (airQualityLevel != null) {
-                    AirBubble entry = new AirBubble(airQualityLevel);
-                    AirBubble clobbered = capability.getAirBubbleEntries().put(pos, entry);
+                    AirQualityLevel clobbered = capability.getAirBubblePositions().put(pos, airQualityLevel);
                     if (clobbered != null) {
                         ThinAir.LOGGER.warn("Clobbered air bubble at {}: {}", pos, clobbered);
                     }
@@ -68,13 +66,13 @@ public class AirBubbleTracker {
             if (chunk != null) {
                 Optional<AirBubblePositionsCapability> maybeCap = ModRegistry.AIR_BUBBLE_POSITIONS_CAPABILITY.maybeGet(chunk);
                 if (maybeCap.isPresent()) {
-                    AirBubblePositionsCapability cap = maybeCap.get();
-                    if (cap.getSkipCountLeft() >= 0) {
-                        recalculateChunk(chunk, cap.getAirBubbleEntries());
+                    AirBubblePositionsCapability capability = maybeCap.get();
+                    if (capability.getSkipCountLeft() >= 0) {
+                        recalculateChunk(chunk, capability.getAirBubblePositions());
                         chunk.setUnsaved(true);
-                        cap.setSkipCountLeft(8);
+                        capability.setSkipCountLeft(8);
                     } else {
-                        cap.setSkipCountLeft(cap.getSkipCountLeft() - 1);
+                        capability.setSkipCountLeft(capability.getSkipCountLeft() - 1);
                     }
                 }
             }
@@ -85,7 +83,7 @@ public class AirBubbleTracker {
         SERVER_CHUNKS_TO_SCAN.clear();
     }
 
-    public static void recalculateChunk(LevelChunk chunk, Map<BlockPos, AirBubble> airBubbleEntries) {
+    public static void recalculateChunk(LevelChunk chunk, Map<BlockPos, AirQualityLevel> airBubbleEntries) {
         airBubbleEntries.clear();
         int minY = chunk.getMinBuildHeight();
         int cornerX = chunk.getPos().getMinBlockX();
@@ -98,7 +96,7 @@ public class AirBubbleTracker {
                     BlockPos pos = new BlockPos(x, y, z);
                     BlockState blockState = chunk.getBlockState(pos);
                     AirQualityLevel airQualityLevel = AirQualityLevel.getAirQualityFromBlock(blockState);
-                    if (airQualityLevel != null) airBubbleEntries.put(pos, new AirBubble(airQualityLevel));
+                    if (airQualityLevel != null) airBubbleEntries.put(pos, airQualityLevel);
                 }
             }
         }

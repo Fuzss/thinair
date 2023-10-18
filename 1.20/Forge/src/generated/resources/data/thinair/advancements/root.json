@@ -2,7 +2,7 @@
   "criteria": {
     "bad_air": {
       "conditions": {
-        "air_qualities": [
+        "AirQualities": [
           "yellow",
           "red"
         ]

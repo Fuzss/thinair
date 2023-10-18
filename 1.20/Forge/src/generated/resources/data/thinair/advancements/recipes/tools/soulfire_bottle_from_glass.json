@@ -3,7 +3,7 @@
   "criteria": {
     "has_the_recipe": {
       "conditions": {
-        "recipe": "minecraft:soulfire_bottle_from_glass"
+        "recipe": "thinair:soulfire_bottle_from_glass"
       },
       "trigger": "minecraft:recipe_unlocked"
     },
@@ -22,7 +22,7 @@
   ],
   "rewards": {
     "recipes": [
-      "minecraft:soulfire_bottle_from_glass"
+      "thinair:soulfire_bottle_from_glass"
     ]
   },
   "sends_telemetry_event": false

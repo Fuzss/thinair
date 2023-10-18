@@ -1,8 +1,7 @@
 package fuzs.thinair.data;
 
-import com.mojang.datafixers.util.Either;
 import fuzs.puzzleslib.api.data.v1.AbstractRecipeProvider;
-import fuzs.thinair.advancements.AirProtectionSource;
+import fuzs.thinair.ThinAir;
 import fuzs.thinair.advancements.criterion.BreatheAirTrigger;
 import fuzs.thinair.api.AirQualityLevel;
 import fuzs.thinair.init.ModRegistry;
@@ -30,7 +29,7 @@ public class ModRecipeProvider extends AbstractRecipeProvider {
     @Override
     protected void buildRecipes(Consumer<FinishedRecipe> exporter) {
         BreatheAirTrigger.Instance yellowTrigger = new BreatheAirTrigger.Instance(ContextAwarePredicate.ANY,
-            EnumSet.of(AirQualityLevel.YELLOW, AirQualityLevel.RED), Either.left(AirProtectionSource.NONE));
+            EnumSet.of(AirQualityLevel.YELLOW, AirQualityLevel.RED));
         ChangeDimensionTrigger.TriggerInstance netherTrigger = ChangeDimensionTrigger.TriggerInstance.changedDimensionTo(Level.NETHER);
 
 
@@ -70,7 +69,7 @@ public class ModRecipeProvider extends AbstractRecipeProvider {
             .pattern("GSG")
             .pattern(" G ")
             .unlockedBy("in_nether", netherTrigger)
-            .save(exporter, "soulfire_bottle_from_glass");
+            .save(exporter, ThinAir.id("soulfire_bottle_from_glass"));
 
         ShapelessRecipeBuilder.shapeless(RecipeCategory.TOOLS, ModRegistry.SOULFIRE_BOTTLE_ITEM.get(), 3)
             .requires(Items.GLASS_BOTTLE, 3)

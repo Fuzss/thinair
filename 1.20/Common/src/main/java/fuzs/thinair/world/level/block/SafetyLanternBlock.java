@@ -1,6 +1,6 @@
 package fuzs.thinair.world.level.block;
 
-import fuzs.thinair.helper.AirHelper;
+import fuzs.thinair.api.AirQualityHelper;
 import fuzs.thinair.api.AirQualityLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -49,8 +49,8 @@ public class SafetyLanternBlock extends LanternBlock {
         definition.add(AIR_QUALITY, LOCKED);
     }
 
-    private static BlockState setAirQuality(Level world, BlockPos pos, BlockState template) {
-        return template.setValue(AIR_QUALITY, AirHelper.getAirQualityAtLocation(Vec3.atCenterOf(pos), world));
+    private static BlockState setAirQuality(Level level, BlockPos pos, BlockState template) {
+        return template.setValue(AIR_QUALITY, AirQualityHelper.INSTANCE.getAirQualityAtLocation(level, Vec3.atCenterOf(pos)));
     }
 
     @Nullable
