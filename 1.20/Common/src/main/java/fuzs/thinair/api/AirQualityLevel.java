@@ -8,7 +8,9 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.effect.MobEffectUtil;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -55,12 +57,11 @@ public enum AirQualityLevel implements StringRepresentable {
 
         @Override
         boolean isProtected(LivingEntity entity) {
-            for (ItemStack itemStack : entity.getAllSlots()) {
-                if (itemStack.is(ModRegistry.BREATHING_UTILITY_ITEM_TAG)) {
-                    if (itemStack.isDamageableItem()) {
-                        if (!entity.level().isClientSide && entity.level().getGameTime() % (20 * 15) == 0) {
-                            itemStack.hurt(1, entity.getRandom(), entity instanceof ServerPlayer player ? player : null);
-                        }
+            for (EquipmentSlot equipmentSlot : EquipmentSlot.values()) {
+                ItemStack itemStack = entity.getItemBySlot(equipmentSlot);
+                if (itemStack.is(ModRegistry.BREATHING_UTILITY_ITEM_TAG) && Mob.getEquipmentSlotForItem(itemStack) == equipmentSlot) {
+                    if (itemStack.isDamageableItem() && !entity.level().isClientSide && entity.level().getGameTime() % (20 * 15) == 0) {
+                        itemStack.hurt(1, entity.getRandom(), entity instanceof ServerPlayer player ? player : null);
                     }
                     return true;
                 }

@@ -2,6 +2,7 @@ package fuzs.thinair.client;
 
 import fuzs.puzzleslib.api.client.core.v1.ClientModConstructor;
 import fuzs.puzzleslib.api.client.core.v1.context.ItemModelPropertiesContext;
+import fuzs.puzzleslib.api.client.core.v1.context.LivingEntityRenderLayersContext;
 import fuzs.puzzleslib.api.client.core.v1.context.RenderTypesContext;
 import fuzs.puzzleslib.api.client.event.v1.ClientChunkEvents;
 import fuzs.puzzleslib.api.client.event.v1.ClientLevelEvents;
@@ -10,13 +11,21 @@ import fuzs.thinair.ThinAir;
 import fuzs.thinair.api.AirQualityHelper;
 import fuzs.thinair.api.AirQualityLevel;
 import fuzs.thinair.client.handler.ClientAirBubbleTracker;
+import fuzs.thinair.client.renderer.entity.layers.RespiratorLayer;
 import fuzs.thinair.init.ModRegistry;
 import fuzs.thinair.world.level.block.SafetyLanternBlock;
+import net.minecraft.client.model.HumanoidArmorModel;
+import net.minecraft.client.model.HumanoidModel;
+import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 
@@ -57,5 +66,12 @@ public class ThinAirClient implements ClientModConstructor {
     @Override
     public void onRegisterBlockRenderTypes(RenderTypesContext<Block> context) {
         context.registerRenderType(RenderType.cutout(), ModRegistry.SIGNAL_TORCH_BLOCK.get(), ModRegistry.WALL_SIGNAL_TORCH_BLOCK.get());
+    }
+
+    @Override
+    public void onRegisterLivingEntityRenderLayers(LivingEntityRenderLayersContext context) {
+        context.registerRenderLayer(EntityType.PLAYER, (RenderLayerParent<Player, HumanoidModel<Player>> playerEntityModelRenderLayerParent, EntityRendererProvider.Context context1) -> {
+            return new RespiratorLayer<>(playerEntityModelRenderLayerParent, new HumanoidArmorModel<>(context1.bakeLayer(ModelLayers.PLAYER_OUTER_ARMOR)));
+        });
     }
 }

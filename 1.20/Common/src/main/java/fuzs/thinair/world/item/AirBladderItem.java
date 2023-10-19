@@ -51,18 +51,19 @@ public class AirBladderItem extends Item {
             if (remainingUseDuration <= this.getUseDuration(itemStack) - 7 && remainingUseDuration % 4 == 0) {
                 entity.playSound(this.getDrinkingSound(), 0.5F, entity.level().random.nextFloat() * 0.1F + 0.9F);
             }
-        } else if (airQualityLevel.canRefillAir) {
-            // do not trigger cooldown
-            entity.stopUsingItem();
         } else {
             entity.releaseUsingItem();
         }
     }
 
     @Override
-    public void releaseUsing(ItemStack stack, Level level, LivingEntity livingEntity, int timeCharged) {
-        if (livingEntity instanceof Player player) player.getCooldowns().addCooldown(this, 140);
-        super.releaseUsing(stack, level, livingEntity, timeCharged);
+    public void releaseUsing(ItemStack itemStack, Level level, LivingEntity livingEntity, int timeCharged) {
+        if (livingEntity instanceof Player player && player.getAirSupply() >= player.getMaxAirSupply()) {
+            if (!AirQualityHelper.INSTANCE.getAirQualityAtLocation(livingEntity.level(), livingEntity.getEyePosition()).canRefillAir) {
+                player.getCooldowns().addCooldown(this, 150);
+            }
+        }
+        super.releaseUsing(itemStack, level, livingEntity, timeCharged);
     }
 
     @Override
