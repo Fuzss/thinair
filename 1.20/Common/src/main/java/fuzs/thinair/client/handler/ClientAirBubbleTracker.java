@@ -31,9 +31,9 @@ public class ClientAirBubbleTracker {
             ChunkPos chunkpos = CLIENT_CHUNKS_TO_SCAN.removeFirst();
             LevelChunk chunk = level.getChunkSource().getChunkNow(chunkpos.x, chunkpos.z);
             if (chunk != null) {
-                Optional<AirBubblePositionsCapability> maybeCap = ModRegistry.AIR_BUBBLE_POSITIONS_CAPABILITY.maybeGet(chunk);
-                if (maybeCap.isPresent()) {
-                    AirBubblePositionsCapability capability = maybeCap.get();
+                Optional<AirBubblePositionsCapability> optional = ModRegistry.AIR_BUBBLE_POSITIONS_CAPABILITY.maybeGet(chunk);
+                if (optional.isPresent()) {
+                    AirBubblePositionsCapability capability = optional.get();
                     if (capability.getSkipCountLeft() >= 0) {
                         ServerAirBubbleTracker.recalculateChunk(chunk, capability.getAirBubblePositions());
                         chunk.setUnsaved(true);

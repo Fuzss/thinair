@@ -1,0 +1,18 @@
+{
+  "type": "thinair:copy_tag_shapeless_recipe",
+  "category": "equipment",
+  "copy_from": {
+    "item": "thinair:air_bladder"
+  },
+  "ingredients": [
+    {
+      "item": "minecraft:netherite_ingot"
+    },
+    {
+      "item": "thinair:air_bladder"
+    }
+  ],
+  "result": {
+    "item": "thinair:reinforced_air_bladder"
+  }
+}

@@ -25,24 +25,31 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.ticks.TickPriority;
 import org.jetbrains.annotations.Nullable;
 
-@SuppressWarnings("deprecation")
 public class SafetyLanternBlock extends LanternBlock {
-    public static final EnumProperty<AirQualityLevel> AIR_QUALITY =
-        EnumProperty.create("air_quality", AirQualityLevel.class);
+    public static final EnumProperty<AirQualityLevel> AIR_QUALITY = EnumProperty.create("air_quality", AirQualityLevel.class);
     public static final BooleanProperty LOCKED = BlockStateProperties.LOCKED;
     public static final String TAG_AIR_QUALITY_LEVEL = "AirQualityLevel";
 
     public SafetyLanternBlock(Properties props) {
         super(props);
-        this.registerDefaultState(this.defaultBlockState()
-            .setValue(AIR_QUALITY, AirQualityLevel.GREEN)
-            .setValue(LOCKED, false));
+        this.registerDefaultState(this.defaultBlockState().setValue(AIR_QUALITY, AirQualityLevel.GREEN).setValue(LOCKED, false));
+    }
+
+    private static BlockState setAirQuality(Level level, BlockPos pos, BlockState template) {
+        return template.setValue(AIR_QUALITY, AirQualityHelper.INSTANCE.getAirQualityAtLocation(level, Vec3.atCenterOf(pos)));
+    }
+
+    public static ItemStack getDisplayItemStack(AirQualityLevel airQualityLevel) {
+        ItemStack itemStack = new ItemStack(ModRegistry.SAFETY_LANTERN_BLOCK.get());
+        itemStack.getOrCreateTag().putInt(TAG_AIR_QUALITY_LEVEL, airQualityLevel.ordinal());
+        return itemStack;
     }
 
     @Override
@@ -51,22 +58,17 @@ public class SafetyLanternBlock extends LanternBlock {
         definition.add(AIR_QUALITY, LOCKED);
     }
 
-    private static BlockState setAirQuality(Level level, BlockPos pos, BlockState template) {
-        return template.setValue(AIR_QUALITY, AirQualityHelper.INSTANCE.getAirQualityAtLocation(level, Vec3.atCenterOf(pos)));
-    }
-
     @Nullable
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext ctx) {
-        var fluidstate = ctx.getLevel().getFluidState(ctx.getClickedPos());
+        FluidState fluidState = ctx.getLevel().getFluidState(ctx.getClickedPos());
 
-        var bs = this.defaultBlockState()
-            .setValue(WATERLOGGED, fluidstate.getType() == Fluids.WATER);
-        bs = setAirQuality(ctx.getLevel(), ctx.getClickedPos(), bs);
+        BlockState blockState = this.defaultBlockState().setValue(WATERLOGGED, fluidState.getType() == Fluids.WATER);
+        blockState = setAirQuality(ctx.getLevel(), ctx.getClickedPos(), blockState);
 
         for (Direction direction : ctx.getNearestLookingDirections()) {
             if (direction.getAxis() == Direction.Axis.Y) {
-                var out = bs.setValue(HANGING, direction == Direction.UP);
+                BlockState out = blockState.setValue(HANGING, direction == Direction.UP);
                 if (out.canSurvive(ctx.getLevel(), ctx.getClickedPos())) {
                     return out;
                 }
@@ -77,19 +79,17 @@ public class SafetyLanternBlock extends LanternBlock {
     }
 
     @Override
-    public void setPlacedBy(Level pLevel, BlockPos pPos, BlockState pState, @Nullable LivingEntity pPlacer,
-        ItemStack pStack) {
+    public void setPlacedBy(Level pLevel, BlockPos pPos, BlockState pState, @Nullable LivingEntity pPlacer, ItemStack pStack) {
         pLevel.scheduleTick(pPos, this, 20, TickPriority.NORMAL);
     }
 
     @Override
-    public InteractionResult use(BlockState bs, Level world, BlockPos pos, Player player, InteractionHand hand,
-        BlockHitResult pHit) {
-        var itemUsed = player.getItemInHand(hand);
+    public InteractionResult use(BlockState bs, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult pHit) {
+        ItemStack itemUsed = player.getItemInHand(hand);
 
         AirQualityLevel lockedAirQuality = null;
         AirQualityLevel presentLockedAirQuality = null;
-        var strippedDye = false;
+        boolean strippedDye = false;
         if (bs.getValue(LOCKED)) {
             presentLockedAirQuality = bs.getValue(AIR_QUALITY);
         }
@@ -106,8 +106,8 @@ public class SafetyLanternBlock extends LanternBlock {
             strippedDye = true;
         }
 
-        var didAnything = false;
-        var newBs = bs;
+        boolean didAnything = false;
+        BlockState newBs = bs;
         if (lockedAirQuality != null) {
             newBs = newBs.setValue(AIR_QUALITY, lockedAirQuality).setValue(LOCKED, true);
             world.levelEvent(player, 3003, pos, 0);
@@ -152,11 +152,5 @@ public class SafetyLanternBlock extends LanternBlock {
     @Override
     public int getAnalogOutputSignal(BlockState pState, Level pLevel, BlockPos pPos) {
         return pState.getValue(AIR_QUALITY).getOutputSignal();
-    }
-
-    public static ItemStack getDisplayItemStack(AirQualityLevel airQualityLevel) {
-        ItemStack itemStack = new ItemStack(ModRegistry.SAFETY_LANTERN_BLOCK.get());
-        itemStack.getOrCreateTag().putInt(TAG_AIR_QUALITY_LEVEL, airQualityLevel.ordinal());
-        return itemStack;
     }
 }

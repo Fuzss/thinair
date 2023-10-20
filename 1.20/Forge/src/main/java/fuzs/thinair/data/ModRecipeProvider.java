@@ -1,6 +1,7 @@
 package fuzs.thinair.data;
 
 import fuzs.puzzleslib.api.data.v1.AbstractRecipeProvider;
+import fuzs.puzzleslib.api.data.v1.recipes.CopyTagShapelessRecipeBuilder;
 import fuzs.thinair.ThinAir;
 import fuzs.thinair.advancements.criterion.BreatheAirTrigger;
 import fuzs.thinair.api.AirQualityLevel;
@@ -51,6 +52,13 @@ public class ModRecipeProvider extends AbstractRecipeProvider {
             .pattern(" L ")
             .unlockedBy("in_dangerous_air", yellowTrigger)
             .save(exporter);
+
+        CopyTagShapelessRecipeBuilder.shapeless(RecipeCategory.TOOLS, ModRegistry.REINFORCED_AIR_BLADDER_ITEM.get())
+                .requires(Items.NETHERITE_INGOT)
+                .requires(ModRegistry.AIR_BLADDER_ITEM.get())
+                .copyFrom(ModRegistry.AIR_BLADDER_ITEM.get())
+                .unlockedBy(getHasName(ModRegistry.AIR_BLADDER_ITEM.get()), has(ModRegistry.AIR_BLADDER_ITEM.get()))
+                .save(exporter);
 
         ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, ModRegistry.SAFETY_LANTERN_BLOCK.get())
                 .define('X', Items.REDSTONE_TORCH)

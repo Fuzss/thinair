@@ -12,7 +12,9 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import org.jetbrains.annotations.Nullable;
@@ -27,12 +29,12 @@ public enum AirQualityLevel implements StringRepresentable {
 
         @Override
         boolean isProtected(LivingEntity entity) {
-            return true;
+            return false;
         }
 
         @Override
-        int getConsumedAirAmount(LivingEntity entity) {
-            return 0;
+        int getAirAmount(LivingEntity entity) {
+            return 4;
         }
     },
     /**
@@ -42,11 +44,11 @@ public enum AirQualityLevel implements StringRepresentable {
 
         @Override
         boolean isProtected(LivingEntity entity) {
-            return true;
+            return false;
         }
 
         @Override
-        int getConsumedAirAmount(LivingEntity entity) {
+        int getAirAmount(LivingEntity entity) {
             return 0;
         }
     },
@@ -57,9 +59,10 @@ public enum AirQualityLevel implements StringRepresentable {
 
         @Override
         boolean isProtected(LivingEntity entity) {
+            if (super.isProtected(entity)) return true;
             for (EquipmentSlot equipmentSlot : EquipmentSlot.values()) {
                 ItemStack itemStack = entity.getItemBySlot(equipmentSlot);
-                if (itemStack.is(ModRegistry.BREATHING_UTILITY_ITEM_TAG) && Mob.getEquipmentSlotForItem(itemStack) == equipmentSlot) {
+                if (itemStack.is(ModRegistry.BREATHING_EQUIPMENT_ITEM_TAG) && Mob.getEquipmentSlotForItem(itemStack) == equipmentSlot) {
                     if (itemStack.isDamageableItem() && !entity.level().isClientSide && entity.level().getGameTime() % (20 * 15) == 0) {
                         itemStack.hurt(1, entity.getRandom(), entity instanceof ServerPlayer player ? player : null);
                     }
@@ -70,25 +73,14 @@ public enum AirQualityLevel implements StringRepresentable {
         }
 
         @Override
-        int getConsumedAirAmount(LivingEntity entity) {
-            return entity.level().getGameTime() % 4 == 0 ? 1 : 0;
+        int getAirAmount(LivingEntity entity) {
+            return entity.level().getGameTime() % 4 == 0 ? super.getAirAmount(entity) : 0;
         }
     },
     /**
      * Completely unable to breathe (like underwater)
      */
-    RED(false, false) {
-
-        @Override
-        boolean isProtected(LivingEntity entity) {
-            return MobEffectUtil.hasWaterBreathing(entity) || entity.isUsingItem() && entity.getUseItem().is(ModRegistry.AIR_BLADDER_ITEM.get());
-        }
-
-        @Override
-        int getConsumedAirAmount(LivingEntity entity) {
-            return 1;
-        }
-    };
+    RED(false, false);
 
     public final boolean canBreathe;
     public final boolean canRefillAir;
@@ -102,6 +94,13 @@ public enum AirQualityLevel implements StringRepresentable {
 
     public TagKey<Block> getAirProvidersTag() {
         return this.tag;
+    }
+
+    @Nullable
+    public static AirQualityLevel getAirQualityAtEyes(BlockState blockState) {
+        if (blockState.is(Blocks.BUBBLE_COLUMN)) return GREEN;
+        if (!blockState.getFluidState().isEmpty()) return RED;
+        return getAirQualityFromBlock(blockState);
     }
 
     @Nullable
@@ -143,16 +142,16 @@ public enum AirQualityLevel implements StringRepresentable {
         return this.ordinal() < other.ordinal();
     }
 
-    abstract boolean isProtected(LivingEntity entity);
+    boolean isProtected(LivingEntity entity) {
+        return MobEffectUtil.hasWaterBreathing(entity) || entity.isUsingItem() && entity.getUseItem().is(ModRegistry.AIR_REFILLER_ITEM_TAG);
+    }
 
-    abstract int getConsumedAirAmount(LivingEntity entity);
+    int getAirAmount(LivingEntity entity) {
+        return entity.getRandom().nextInt(EnchantmentHelper.getRespiration(entity) + 1) == 0 ? -1 : 0;
+    }
 
-    public int getConsumedAirAmountAfterProtection(LivingEntity entity) {
-        AirQualityLevel[] values = AirQualityLevel.values();
-        for (int i = values.length - 1; i >= this.ordinal(); i--) {
-            if (values[i].isProtected(entity)) return 0;
-        }
-        return this.getConsumedAirAmount(entity);
+    public int getAirAmountAfterProtection(LivingEntity entity) {
+        return this.isProtected(entity) ? 0 : this.getAirAmount(entity);
     }
 
     public float getItemModelProperty() {

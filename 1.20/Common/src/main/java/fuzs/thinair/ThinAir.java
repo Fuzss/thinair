@@ -9,10 +9,14 @@ import fuzs.puzzleslib.api.event.v1.level.ServerLevelEvents;
 import fuzs.puzzleslib.api.event.v1.level.ServerLevelTickEvents;
 import fuzs.puzzleslib.api.event.v1.server.LootTableLoadEvents;
 import fuzs.puzzleslib.api.item.v2.CreativeModeTabConfigurator;
+import fuzs.puzzleslib.api.network.v3.NetworkHandlerV3;
+import fuzs.thinair.advancements.ModAdvancementTriggers;
 import fuzs.thinair.handler.DrownedAttackHandler;
 import fuzs.thinair.handler.ServerAirBubbleTracker;
 import fuzs.thinair.init.ModRegistry;
+import fuzs.thinair.network.ClientboundChunkAirQualityMessage;
 import fuzs.thinair.world.level.block.SignalTorchBlock;
+import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.loot.BuiltInLootTables;
@@ -31,9 +35,12 @@ public class ThinAir implements ModConstructor {
     public static final String MOD_NAME = "Thin Air";
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_NAME);
 
+    public static final NetworkHandlerV3 NETWORK = NetworkHandlerV3.builder(MOD_ID).registerClientbound(ClientboundChunkAirQualityMessage.class);
+
     @Override
     public void onConstructMod() {
         ModRegistry.touch();
+        ModAdvancementTriggers.registerTriggers(CriteriaTriggers::register);
         registerHandlers();
     }
 
@@ -48,7 +55,7 @@ public class ThinAir implements ModConstructor {
             injectLootPool(identifier, addPool, BuiltInLootTables.STRONGHOLD_CORRIDOR, ModRegistry.SAFETY_LANTERN_STRONGHOLD_LOOT_TABLE);
         });
         PlayerInteractEvents.USE_BLOCK.register(SignalTorchBlock::onUseBlock);
-        ServerChunkEvents.LOAD.register(ServerAirBubbleTracker::onChunkUnload);
+        ServerChunkEvents.LOAD.register(ServerAirBubbleTracker::onChunkLoad);
         ServerLevelEvents.UNLOAD.register(ServerAirBubbleTracker::onLevelUnload);
         ServerLevelTickEvents.END.register(ServerAirBubbleTracker::consumeReqdChunksServer);
         LivingHurtCallback.EVENT.register(DrownedAttackHandler::onLivingHurt);
@@ -65,6 +72,7 @@ public class ThinAir implements ModConstructor {
         context.registerCreativeModeTab(CreativeModeTabConfigurator.from(MOD_ID).icon(() -> new ItemStack(ModRegistry.AIR_BLADDER_ITEM.get())).displayItems((itemDisplayParameters, output) -> {
             output.accept(ModRegistry.RESPIRATOR_ITEM.get());
             output.accept(ModRegistry.AIR_BLADDER_ITEM.get());
+            output.accept(ModRegistry.REINFORCED_AIR_BLADDER_ITEM.get());
             output.accept(ModRegistry.SOULFIRE_BOTTLE_ITEM.get());
             output.accept(ModRegistry.SAFETY_LANTERN_ITEM.get());
         }));

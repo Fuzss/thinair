@@ -28,8 +28,8 @@ public class ServerAirBubbleTracker {
         ChunkPos chunkPos = new ChunkPos(pos);
         LevelChunk chunk = world.getChunkSource().getChunkNow(chunkPos.x, chunkPos.z);
         if (chunk != null) {
-            Optional<AirBubblePositionsCapability> maybeCap = ModRegistry.AIR_BUBBLE_POSITIONS_CAPABILITY.maybeGet(chunk);
-            maybeCap.ifPresent(capability -> {
+            Optional<AirBubblePositionsCapability> optional = ModRegistry.AIR_BUBBLE_POSITIONS_CAPABILITY.maybeGet(chunk);
+            optional.ifPresent(capability -> {
                 if (AirQualityLevel.getAirQualityFromBlock(oldBlockState) != null) {
                     // need to remove this
                     AirQualityLevel removed = capability.getAirBubblePositions().remove(pos);
@@ -51,7 +51,7 @@ public class ServerAirBubbleTracker {
         }
     }
 
-    public static void onChunkUnload(LevelAccessor level, ChunkAccess chunk) {
+    public static void onChunkLoad(LevelAccessor level, ChunkAccess chunk) {
         ChunkPos chunkpos = chunk.getPos();
         LevelChunk chunkFromSource = level.getChunkSource().getChunkNow(chunkpos.x, chunkpos.z);
         if (chunkFromSource != null) {

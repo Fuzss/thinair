@@ -10,6 +10,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.Optional;
@@ -18,6 +19,10 @@ public class AirQualityHelperImpl implements AirQualityHelper {
 
     @Override
     public AirQualityLevel getAirQualityAtLocation(Level level, Vec3 location) {
+
+        BlockState blockAtEyes = level.getBlockState(BlockPos.containing(location));
+        AirQualityLevel airQualityAtEyes = AirQualityLevel.getAirQualityAtEyes(blockAtEyes);
+        if (airQualityAtEyes != null) return airQualityAtEyes;
 
         // Let's throw the player a bone and say the best air quality wins
         AirQualityLevel bestAirBubbleQuality = null;
@@ -45,9 +50,9 @@ public class AirQualityHelperImpl implements AirQualityHelper {
 
         if (bestAirBubbleQuality != null) {
             return bestAirBubbleQuality;
+        } else {
+            return CommonConfig.getAirQualityAtLevelByDimension(level.dimension().location(), (int) Math.round(location.y));
         }
-
-        return CommonConfig.getAirQualityAtLevelByDimension(level.dimension().location(), (int) Math.round(location.y));
     }
 
     @Override

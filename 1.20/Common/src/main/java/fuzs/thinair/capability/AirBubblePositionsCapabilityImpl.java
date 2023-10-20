@@ -35,6 +35,7 @@ public class AirBubblePositionsCapabilityImpl implements AirBubblePositionsCapab
 
     @Override
     public void write(CompoundTag tag) {
+
         ListTag positions = new ListTag();
         byte[] qualitiesArr = new byte[this.airBubbleEntries.size()];
 
@@ -49,11 +50,11 @@ public class AirBubblePositionsCapabilityImpl implements AirBubblePositionsCapab
         tag.put(TAG_POSITIONS, positions);
         tag.put(TAG_QUALITY, new ByteArrayTag(qualitiesArr));
         tag.putInt(TAG_SKIP_COUNT_LEFT, this.skipCountLeft);
-
     }
 
     @Override
     public void read(CompoundTag tag) {
+
         ListTag positions = tag.getList(TAG_POSITIONS, Tag.TAG_COMPOUND);
         byte[] qualities = tag.getByteArray(TAG_QUALITY);
 

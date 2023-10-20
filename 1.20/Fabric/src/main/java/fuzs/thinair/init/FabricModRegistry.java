@@ -8,6 +8,7 @@ import static fuzs.thinair.init.ModRegistry.REGISTRY;
 
 public class FabricModRegistry {
     public static final RegistryReference<Item> AIR_BLADDER_ITEM = REGISTRY.registerItem("air_bladder", () -> new AirBladderFabricItem(new Item.Properties().durability(327)));
+    public static final RegistryReference<Item> REINFORCED_AIR_BLADDER_ITEM = REGISTRY.registerItem("reinforced_air_bladder", () -> new AirBladderFabricItem(new Item.Properties().durability(1962)));
 
     public static void touch() {
 

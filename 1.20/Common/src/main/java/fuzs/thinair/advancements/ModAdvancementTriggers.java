@@ -10,8 +10,7 @@ import java.util.function.Consumer;
 public class ModAdvancementTriggers {
     public static final BreatheAirTrigger BREATHE_AIR = new BreatheAirTrigger();
     public static final SignalificateTorchTrigger SIGNALIFICATE_TORCH = new SignalificateTorchTrigger();
-    public static final UseSoulfireBecauseItDoesntTriggerVanillaForSomeReasonTrigger
-        USE_SOULFIRE_BOTTLE = new UseSoulfireBecauseItDoesntTriggerVanillaForSomeReasonTrigger();
+    public static final UseSoulfireBecauseItDoesntTriggerVanillaForSomeReasonTrigger USE_SOULFIRE_BOTTLE = new UseSoulfireBecauseItDoesntTriggerVanillaForSomeReasonTrigger();
 
     public static void registerTriggers(Consumer<CriterionTrigger<?>> consumer) {
         consumer.accept(BREATHE_AIR);

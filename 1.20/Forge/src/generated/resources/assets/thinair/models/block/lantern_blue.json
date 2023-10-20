@@ -1,6 +1,5 @@
 {
   "parent": "minecraft:block/template_lantern",
-  "render_type": "minecraft:cutout",
   "textures": {
     "lantern": "thinair:block/lantern_blue"
   }
