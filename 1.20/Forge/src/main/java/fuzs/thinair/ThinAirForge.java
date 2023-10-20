@@ -80,8 +80,10 @@ public class ThinAirForge {
             }
         });
         MinecraftForge.EVENT_BUS.addListener((final ChunkWatchEvent.Watch evt) -> {
-            ModRegistry.AIR_BUBBLE_POSITIONS_CAPABILITY.maybeGet(evt.getChunk()).ifPresent(t -> {
-                ThinAir.NETWORK.sendTo(evt.getPlayer(), new ClientboundChunkAirQualityMessage(evt.getPos(), t.toCompoundTag()));
+            ModRegistry.AIR_BUBBLE_POSITIONS_CAPABILITY.maybeGet(evt.getChunk()).ifPresent(capability -> {
+                if (!capability.getAirBubblePositions().isEmpty()) {
+                    ThinAir.NETWORK.sendTo(evt.getPlayer(), new ClientboundChunkAirQualityMessage(evt.getPos(), capability.toCompoundTag()));
+                }
             });
         });
     }
