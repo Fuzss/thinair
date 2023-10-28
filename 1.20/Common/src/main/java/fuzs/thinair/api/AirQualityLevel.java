@@ -2,15 +2,14 @@ package fuzs.thinair.api;
 
 import fuzs.thinair.ThinAir;
 import fuzs.thinair.config.CommonConfig;
+import fuzs.thinair.core.CommonAbstractions;
 import fuzs.thinair.init.ModRegistry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.effect.MobEffectUtil;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Mob;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.block.Block;
@@ -20,6 +19,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Locale;
+import java.util.Optional;
 
 public enum AirQualityLevel implements StringRepresentable {
     /**
@@ -60,14 +60,13 @@ public enum AirQualityLevel implements StringRepresentable {
         @Override
         boolean isProtected(LivingEntity entity) {
             if (super.isProtected(entity)) return true;
-            for (EquipmentSlot equipmentSlot : EquipmentSlot.values()) {
-                ItemStack itemStack = entity.getItemBySlot(equipmentSlot);
-                if (itemStack.is(ModRegistry.BREATHING_EQUIPMENT_ITEM_TAG) && Mob.getEquipmentSlotForItem(itemStack) == equipmentSlot) {
-                    if (itemStack.isDamageableItem() && !entity.level().isClientSide && entity.level().getGameTime() % (20 * 15) == 0) {
-                        itemStack.hurt(1, entity.getRandom(), entity instanceof ServerPlayer player ? player : null);
-                    }
-                    return true;
+            Optional<ItemStack> optional = CommonAbstractions.INSTANCE.findEquippedItem(entity, ModRegistry.BREATHING_EQUIPMENT_ITEM_TAG);
+            if (optional.isPresent()) {
+                ItemStack itemStack = optional.get();
+                if (itemStack.isDamageableItem() && !entity.level().isClientSide && entity.level().getGameTime() % (20 * 15) == 0) {
+                    itemStack.hurt(1, entity.getRandom(), entity instanceof ServerPlayer player ? player : null);
                 }
+                return true;
             }
             return false;
         }

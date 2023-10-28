@@ -25,7 +25,6 @@ import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLConstructModEvent;
-import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 
 import java.util.OptionalInt;
 
@@ -98,13 +97,6 @@ public class ThinAirForge {
     private static void registerIntegrations() {
         if (ModLoaderEnvironment.INSTANCE.isModLoaded("curios")) {
             CuriosIntegration.registerHandlers();
-        }
-    }
-
-    @SubscribeEvent
-    public static void onInterModEnqueue(final InterModEnqueueEvent evt) {
-        if (ModLoaderEnvironment.INSTANCE.isModLoaded("curios")) {
-            CuriosIntegration.sendInterModComms();
         }
     }
 }

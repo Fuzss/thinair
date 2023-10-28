@@ -29,7 +29,7 @@ public class AirBubbleTracker {
     public static void onBlockStateChange(ServerLevel level, BlockPos pos, BlockState oldBlockState, BlockState newBlockState) {
         ChunkPos chunkPos = new ChunkPos(pos);
         LevelChunk chunk = level.getChunkSource().getChunkNow(chunkPos.x, chunkPos.z);
-        if (chunk != null) {
+        if (chunk != null && !oldBlockState.is(newBlockState.getBlock())) {
             Optional<AirBubblePositionsCapability> optional = ModRegistry.AIR_BUBBLE_POSITIONS_CAPABILITY.maybeGet(chunk);
             optional.ifPresent(capability -> {
                 if (AirQualityLevel.getAirQualityFromBlock(oldBlockState) != null) {
@@ -39,7 +39,7 @@ public class AirBubbleTracker {
                         ThinAir.LOGGER.warn("Didn't remove any air bubbles at {}", pos);
                     } else {
                         chunk.setUnsaved(true);
-                        ThinAir.NETWORK.sendToAllNear((Vec3i) pos, level, new ClientboundChunkAirQualityMessage(chunk.getPos(), Map.of(pos, removed), ClientboundChunkAirQualityMessage.Mode.REMOVE));
+                        ThinAir.NETWORK.sendToAllTracking(chunk, new ClientboundChunkAirQualityMessage(chunk.getPos(), Map.of(pos, removed), ClientboundChunkAirQualityMessage.Mode.REMOVE));
                     }
                 }
 
@@ -50,18 +50,14 @@ public class AirBubbleTracker {
                         ThinAir.LOGGER.warn("Clobbered air bubble at {}: {}", pos, clobbered);
                     }
                     chunk.setUnsaved(true);
-                    ThinAir.NETWORK.sendToAllNear((Vec3i) pos, level, new ClientboundChunkAirQualityMessage(chunk.getPos(), Map.of(pos, airQualityLevel), ClientboundChunkAirQualityMessage.Mode.ADD));
+                    ThinAir.NETWORK.sendToAllTracking(chunk, new ClientboundChunkAirQualityMessage(chunk.getPos(), Map.of(pos, airQualityLevel), ClientboundChunkAirQualityMessage.Mode.ADD));
                 }
             });
         }
     }
 
-    public static void onChunkLoad(LevelAccessor level, ChunkAccess chunk) {
-        ChunkPos chunkpos = chunk.getPos();
-        LevelChunk chunkFromSource = level.getChunkSource().getChunkNow(chunkpos.x, chunkpos.z);
-        if (chunkFromSource != null) {
-            CHUNKS_TO_SCAN.addLast(chunkpos);
-        }
+    public static void onChunkLoad(LevelAccessor level, LevelChunk chunk) {
+        CHUNKS_TO_SCAN.addLast(chunk.getPos());
     }
 
     public static void onEndLevelTick(MinecraftServer server, ServerLevel level) {
@@ -90,7 +86,7 @@ public class AirBubbleTracker {
         CHUNKS_TO_SCAN.clear();
     }
 
-    public static boolean recalculateChunk(LevelChunk chunk, Map<BlockPos, AirQualityLevel> airBubbleEntries) {
+    private static boolean recalculateChunk(LevelChunk chunk, Map<BlockPos, AirQualityLevel> airBubbleEntries) {
         boolean markDirty = !airBubbleEntries.isEmpty();
         airBubbleEntries.clear();
         int minY = chunk.getMinBuildHeight();

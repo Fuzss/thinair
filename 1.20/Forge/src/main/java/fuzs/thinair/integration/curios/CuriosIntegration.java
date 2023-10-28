@@ -8,35 +8,41 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
-import net.minecraftforge.fml.InterModComms;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import top.theillusivec4.curios.api.CuriosApi;
 import top.theillusivec4.curios.api.CuriosCapability;
-import top.theillusivec4.curios.api.SlotTypeMessage;
-import top.theillusivec4.curios.api.SlotTypePreset;
+import top.theillusivec4.curios.api.SlotContext;
 import top.theillusivec4.curios.api.type.capability.ICurio;
 
 public class CuriosIntegration {
 
-    public static void onAttachCapabilities(final AttachCapabilitiesEvent<ItemStack> evt) {
-        if (!evt.getObject().is(ModRegistry.RESPIRATOR_ITEM.get())) return;
-        evt.addCapability(CuriosCapability.ID_ITEM, new ICapabilityProvider() {
-            private final ICurio curio = () -> evt.getObject();
+    public static void registerHandlers() {
+        MinecraftForge.EVENT_BUS.addGenericListener(ItemStack.class, (AttachCapabilitiesEvent<ItemStack> evt) -> {
+            ItemStack itemStack = evt.getObject();
+            if (!itemStack.is(ModRegistry.RESPIRATOR_ITEM.get())) return;
+            LazyOptional<ICurio> curio = LazyOptional.of(() -> new RespiratorCurio(itemStack));
+            evt.addCapability(CuriosCapability.ID_ITEM, new ICapabilityProvider() {
 
-            @NotNull
-            @Override
-            public <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
-                return CuriosCapability.ITEM.orEmpty(cap, LazyOptional.of(() -> this.curio));
-            }
+                @NotNull
+                @Override
+                public <T> LazyOptional<T> getCapability(@NotNull Capability<T> capability, @Nullable Direction side) {
+                    return CuriosCapability.ITEM.orEmpty(capability, curio);
+                }
+            });
+            evt.addListener(curio::invalidate);
         });
     }
 
-    public static void sendInterModComms() {
-        InterModComms.sendTo(CuriosApi.MODID, SlotTypeMessage.REGISTER_TYPE, () -> SlotTypePreset.HEAD.getMessageBuilder().build());
-    }
+    private record RespiratorCurio(ItemStack itemStack) implements ICurio {
 
-    public static void registerHandlers() {
-        MinecraftForge.EVENT_BUS.addGenericListener(ItemStack.class, CuriosIntegration::onAttachCapabilities);
+        @Override
+        public boolean canEquipFromUse(SlotContext slotContext) {
+            return true;
+        }
+
+        @Override
+        public ItemStack getStack() {
+            return this.itemStack;
+        }
     }
 }
