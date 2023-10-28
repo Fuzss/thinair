@@ -5,11 +5,13 @@ import fuzs.thinair.ThinAir;
 import fuzs.thinair.api.AirQualityLevel;
 import fuzs.thinair.capability.AirBubblePositionsCapability;
 import fuzs.thinair.init.ModRegistry;
+import fuzs.thinair.network.ClientboundChunkAirQualityMessage;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Vec3i;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.ChunkPos;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkAccess;
@@ -21,12 +23,12 @@ import java.util.Deque;
 import java.util.Map;
 import java.util.Optional;
 
-public class ServerAirBubbleTracker {
-    private static final Deque<ChunkPos> SERVER_CHUNKS_TO_SCAN = Queues.synchronizedDeque(new ArrayDeque<>());
+public class AirBubbleTracker {
+    private static final Deque<ChunkPos> CHUNKS_TO_SCAN = Queues.synchronizedDeque(new ArrayDeque<>());
 
-    public static void onBlockChanged(Level world, BlockPos pos, BlockState oldBlockState, BlockState newBlockState) {
+    public static void onBlockStateChange(ServerLevel level, BlockPos pos, BlockState oldBlockState, BlockState newBlockState) {
         ChunkPos chunkPos = new ChunkPos(pos);
-        LevelChunk chunk = world.getChunkSource().getChunkNow(chunkPos.x, chunkPos.z);
+        LevelChunk chunk = level.getChunkSource().getChunkNow(chunkPos.x, chunkPos.z);
         if (chunk != null) {
             Optional<AirBubblePositionsCapability> optional = ModRegistry.AIR_BUBBLE_POSITIONS_CAPABILITY.maybeGet(chunk);
             optional.ifPresent(capability -> {
@@ -35,8 +37,10 @@ public class ServerAirBubbleTracker {
                     AirQualityLevel removed = capability.getAirBubblePositions().remove(pos);
                     if (removed == null) {
                         ThinAir.LOGGER.warn("Didn't remove any air bubbles at {}", pos);
+                    } else {
+                        chunk.setUnsaved(true);
+                        ThinAir.NETWORK.sendToAllNear((Vec3i) pos, level, new ClientboundChunkAirQualityMessage(chunk.getPos(), Map.of(pos, removed), ClientboundChunkAirQualityMessage.Mode.REMOVE));
                     }
-                    chunk.setUnsaved(true);
                 }
 
                 AirQualityLevel airQualityLevel = AirQualityLevel.getAirQualityFromBlock(newBlockState);
@@ -46,6 +50,7 @@ public class ServerAirBubbleTracker {
                         ThinAir.LOGGER.warn("Clobbered air bubble at {}: {}", pos, clobbered);
                     }
                     chunk.setUnsaved(true);
+                    ThinAir.NETWORK.sendToAllNear((Vec3i) pos, level, new ClientboundChunkAirQualityMessage(chunk.getPos(), Map.of(pos, airQualityLevel), ClientboundChunkAirQualityMessage.Mode.ADD));
                 }
             });
         }
@@ -55,21 +60,23 @@ public class ServerAirBubbleTracker {
         ChunkPos chunkpos = chunk.getPos();
         LevelChunk chunkFromSource = level.getChunkSource().getChunkNow(chunkpos.x, chunkpos.z);
         if (chunkFromSource != null) {
-            SERVER_CHUNKS_TO_SCAN.addLast(chunkpos);
+            CHUNKS_TO_SCAN.addLast(chunkpos);
         }
     }
 
-    public static void consumeReqdChunksServer(MinecraftServer server, ServerLevel level) {
-        if (!SERVER_CHUNKS_TO_SCAN.isEmpty()) {
-            ChunkPos chunkpos = SERVER_CHUNKS_TO_SCAN.removeFirst();
+    public static void onEndLevelTick(MinecraftServer server, ServerLevel level) {
+        if (!CHUNKS_TO_SCAN.isEmpty()) {
+            ChunkPos chunkpos = CHUNKS_TO_SCAN.removeFirst();
             LevelChunk chunk = level.getChunkSource().getChunkNow(chunkpos.x, chunkpos.z);
             if (chunk != null) {
                 Optional<AirBubblePositionsCapability> maybeCap = ModRegistry.AIR_BUBBLE_POSITIONS_CAPABILITY.maybeGet(chunk);
                 if (maybeCap.isPresent()) {
                     AirBubblePositionsCapability capability = maybeCap.get();
-                    if (capability.getSkipCountLeft() >= 0) {
-                        recalculateChunk(chunk, capability.getAirBubblePositions());
-                        chunk.setUnsaved(true);
+                    if (capability.getSkipCountLeft() <= 0) {
+                        if (recalculateChunk(chunk, capability.getAirBubblePositions())) {
+                            chunk.setUnsaved(true);
+                            ThinAir.NETWORK.sendToAllTracking(chunk, new ClientboundChunkAirQualityMessage(chunk.getPos(), capability.getAirBubblePositions(), ClientboundChunkAirQualityMessage.Mode.REPLACE_ALL));
+                        }
                         capability.setSkipCountLeft(8);
                     } else {
                         capability.setSkipCountLeft(capability.getSkipCountLeft() - 1);
@@ -80,10 +87,11 @@ public class ServerAirBubbleTracker {
     }
 
     public static void onLevelUnload(MinecraftServer server, LevelAccessor level) {
-        SERVER_CHUNKS_TO_SCAN.clear();
+        CHUNKS_TO_SCAN.clear();
     }
 
-    public static void recalculateChunk(LevelChunk chunk, Map<BlockPos, AirQualityLevel> airBubbleEntries) {
+    public static boolean recalculateChunk(LevelChunk chunk, Map<BlockPos, AirQualityLevel> airBubbleEntries) {
+        boolean markDirty = !airBubbleEntries.isEmpty();
         airBubbleEntries.clear();
         int minY = chunk.getMinBuildHeight();
         int cornerX = chunk.getPos().getMinBlockX();
@@ -96,9 +104,19 @@ public class ServerAirBubbleTracker {
                     BlockPos pos = new BlockPos(x, y, z);
                     BlockState blockState = chunk.getBlockState(pos);
                     AirQualityLevel airQualityLevel = AirQualityLevel.getAirQualityFromBlock(blockState);
-                    if (airQualityLevel != null) airBubbleEntries.put(pos, airQualityLevel);
+                    if (airQualityLevel != null) {
+                        airBubbleEntries.put(pos, airQualityLevel);
+                        markDirty = true;
+                    }
                 }
             }
         }
+        return markDirty;
+    }
+
+    public static void onChunkWatch(ServerPlayer player, LevelChunk chunk, ServerLevel level) {
+        ModRegistry.AIR_BUBBLE_POSITIONS_CAPABILITY.maybeGet(chunk).ifPresent(capability -> {
+            ThinAir.NETWORK.sendTo(player, new ClientboundChunkAirQualityMessage(chunk.getPos(), capability.getAirBubblePositions(), ClientboundChunkAirQualityMessage.Mode.REPLACE_ALL));
+        });
     }
 }

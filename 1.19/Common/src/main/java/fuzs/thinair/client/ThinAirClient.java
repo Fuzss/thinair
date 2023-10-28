@@ -11,14 +11,9 @@ import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.model.geom.builders.CubeDeformation;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.server.packs.resources.PreparableReloadListener;
-import net.minecraft.server.packs.resources.ResourceManager;
-import net.minecraft.util.Unit;
-import net.minecraft.util.profiling.ProfilerFiller;
+import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
-
-import java.util.concurrent.Executor;
 
 public class ThinAirClient implements ClientModConstructor {
 
@@ -46,11 +41,9 @@ public class ThinAirClient implements ClientModConstructor {
 
     @Override
     public void onRegisterClientReloadListeners(ClientReloadListenersContext context) {
-        context.registerReloadListener("monocle_model", (PreparableReloadListener.PreparationBarrier preparationBarrier, ResourceManager resourceManager, ProfilerFiller profilerFiller, ProfilerFiller profilerFiller2, Executor executor, Executor executor2) -> {
-            return preparationBarrier.wait(Unit.INSTANCE).thenRunAsync(() -> {
-                EntityModelSet entityModels = Minecraft.getInstance().getEntityModels();
-                RespiratorRenderer.bakeModel(entityModels);
-            }, executor2);
+        context.registerReloadListener("respirator_model", (ResourceManagerReloadListener) resourceManager -> {
+            EntityModelSet entityModels = Minecraft.getInstance().getEntityModels();
+            RespiratorRenderer.bakeModel(entityModels);
         });
     }
 }

@@ -1,30 +1,31 @@
 package fuzs.thinair;
 
 import fuzs.puzzleslib.api.capability.v2.ForgeCapabilityHelper;
-import fuzs.puzzleslib.api.core.v1.ContentRegistrationFlags;
 import fuzs.puzzleslib.api.core.v1.ModConstructor;
+import fuzs.puzzleslib.api.core.v1.ModLoaderEnvironment;
+import fuzs.puzzleslib.api.data.v2.core.DataProviderHelper;
 import fuzs.puzzleslib.api.event.v1.core.EventResult;
+import fuzs.puzzleslib.api.event.v1.core.ForgeEventInvokerRegistry;
 import fuzs.puzzleslib.api.event.v1.data.DefaultedInt;
+import fuzs.puzzleslib.api.event.v1.entity.living.LivingEvents;
 import fuzs.thinair.capability.AirBubblePositionsCapability;
 import fuzs.thinair.config.CommonConfig;
 import fuzs.thinair.data.*;
-import fuzs.thinair.handler.TickAirHandler;
 import fuzs.thinair.init.ForgeModRegistry;
 import fuzs.thinair.init.ModRegistry;
-import fuzs.thinair.network.ClientboundChunkAirQualityMessage;
+import fuzs.thinair.integration.curios.CuriosIntegration;
 import net.minecraft.world.effect.MobEffectUtil;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.CapabilityToken;
-import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.event.entity.living.LivingBreatheEvent;
-import net.minecraftforge.event.level.ChunkWatchEvent;
+import net.minecraftforge.event.entity.living.LivingDrownEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLConstructModEvent;
+import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 
 import java.util.OptionalInt;
 
@@ -34,21 +35,20 @@ public class ThinAirForge {
 
     @SubscribeEvent
     public static void onConstructMod(final FMLConstructModEvent evt) {
+        // TODO remove when this has been re-enabled in Puzzles Lib
+        registerEventInvokers();
         ForgeModRegistry.touch();
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, CommonConfig.SPEC);
-        ModConstructor.construct(ThinAir.MOD_ID, ThinAir::new, ContentRegistrationFlags.COPY_TAG_RECIPES);
+        ModConstructor.construct(ThinAir.MOD_ID, ThinAir::new);
         registerCapabilities();
-        registerHandlers();
+        registerIntegrations();
+        DataProviderHelper.registerDataProviders(ThinAir.MOD_ID, ModAdvancementProvider::new, ModBlockLootProvider::new, ModModelProvider::new, ModBlockTagsProvider::new, ModChestLootProvider::new, ModEntityTypeTagsProvider::new, ModRecipeProvider::new);
+        DataProviderHelper.registerDataProviders(ThinAir.MOD_ID, ModItemTagsProvider::new);
     }
 
-    private static void registerCapabilities() {
-        ForgeCapabilityHelper.setCapabilityToken(ModRegistry.AIR_BUBBLE_POSITIONS_CAPABILITY, new CapabilityToken<AirBubblePositionsCapability>() {});
-    }
-
-    @Deprecated(forRemoval = true)
-    private static void registerHandlers() {
-        // TODO remove this and switch to puzzles implementation
-        MinecraftForge.EVENT_BUS.addListener((final LivingBreatheEvent evt) -> {
+    @Deprecated
+    private static void registerEventInvokers() {
+        ForgeEventInvokerRegistry.INSTANCE.register(LivingEvents.Breathe.class, LivingBreatheEvent.class, (LivingEvents.Breathe callback, LivingBreatheEvent evt) -> {
             final int airAmountValue;
             if (!evt.canBreathe()) {
                 airAmountValue = -evt.getConsumeAirAmount();
@@ -61,7 +61,7 @@ public class ThinAirForge {
             LivingEntity entity = evt.getEntity();
             // do not use LivingBreatheEvent::canBreathe, it is merged with LivingBreatheEvent::canRefillAir, so recalculate the value
             boolean canLoseAir = !entity.canDrownInFluidType(entity.getEyeInFluidType()) && !MobEffectUtil.hasWaterBreathing(entity) && (!(entity instanceof Player) || !((Player) entity).getAbilities().invulnerable);
-            EventResult result = TickAirHandler.onLivingBreathe(entity, airAmount, evt.canRefillAir(), canLoseAir);
+            EventResult result = callback.onLivingBreathe(entity, airAmount, evt.canRefillAir(), canLoseAir);
             if (result.isInterrupt()) {
                 evt.setCanBreathe(true);
                 evt.setCanRefillAir(false);
@@ -79,24 +79,32 @@ public class ThinAirForge {
                 }
             }
         });
-        MinecraftForge.EVENT_BUS.addListener((final ChunkWatchEvent.Watch evt) -> {
-            ModRegistry.AIR_BUBBLE_POSITIONS_CAPABILITY.maybeGet(evt.getChunk()).ifPresent(capability -> {
-                if (!capability.getAirBubblePositions().isEmpty()) {
-                    ThinAir.NETWORK.sendTo(evt.getPlayer(), new ClientboundChunkAirQualityMessage(evt.getPos(), capability.toCompoundTag()));
+        ForgeEventInvokerRegistry.INSTANCE.register(LivingEvents.Drown.class, LivingDrownEvent.class, (LivingEvents.Drown callback, LivingDrownEvent evt) -> {
+            EventResult result = callback.onLivingDrown(evt.getEntity(), evt.getEntity().getAirSupply(), evt.isDrowning());
+            if (result.isInterrupt()) {
+                if (result.getAsBoolean()) {
+                    evt.setDrowning(true);
+                } else {
+                    evt.setCanceled(true);
                 }
-            });
+            }
         });
     }
 
+    private static void registerCapabilities() {
+        ForgeCapabilityHelper.setCapabilityToken(ModRegistry.AIR_BUBBLE_POSITIONS_CAPABILITY, new CapabilityToken<AirBubblePositionsCapability>() {});
+    }
+
+    private static void registerIntegrations() {
+        if (ModLoaderEnvironment.INSTANCE.isModLoaded("curios")) {
+            CuriosIntegration.registerHandlers();
+        }
+    }
+
     @SubscribeEvent
-    public static void onGatherData(final GatherDataEvent evt) {
-        evt.getGenerator().addProvider(true, new ModAdvancementProvider(evt, ThinAir.MOD_ID));
-        evt.getGenerator().addProvider(true, new ModBlockLootProvider(evt, ThinAir.MOD_ID));
-        evt.getGenerator().addProvider(evt.includeClient(), new ModModelProvider(evt, ThinAir.MOD_ID));
-        evt.getGenerator().addProvider(true, new ModBlockTagsProvider(evt, ThinAir.MOD_ID));
-        evt.getGenerator().addProvider(true, new ModChestLootProvider(evt, ThinAir.MOD_ID));
-        evt.getGenerator().addProvider(true, new ModEntityTypeTagsProvider(evt, ThinAir.MOD_ID));
-        evt.getGenerator().addProvider(true, new ModItemTagsProvider(evt, ThinAir.MOD_ID));
-        evt.getGenerator().addProvider(true, new ModRecipeProvider(evt, ThinAir.MOD_ID));
+    public static void onInterModEnqueue(final InterModEnqueueEvent evt) {
+        if (ModLoaderEnvironment.INSTANCE.isModLoaded("curios")) {
+            CuriosIntegration.sendInterModComms();
+        }
     }
 }

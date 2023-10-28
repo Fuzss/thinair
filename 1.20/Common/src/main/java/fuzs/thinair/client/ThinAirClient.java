@@ -2,36 +2,30 @@ package fuzs.thinair.client;
 
 import fuzs.puzzleslib.api.client.core.v1.ClientModConstructor;
 import fuzs.puzzleslib.api.client.core.v1.context.ItemModelPropertiesContext;
+import fuzs.puzzleslib.api.client.core.v1.context.LayerDefinitionsContext;
 import fuzs.puzzleslib.api.client.core.v1.context.RenderTypesContext;
-import fuzs.puzzleslib.api.client.event.v1.ClientChunkEvents;
-import fuzs.puzzleslib.api.client.event.v1.ClientLevelEvents;
-import fuzs.puzzleslib.api.client.event.v1.ClientLevelTickEvents;
+import fuzs.puzzleslib.api.core.v1.context.AddReloadListenersContext;
 import fuzs.thinair.ThinAir;
 import fuzs.thinair.api.AirQualityHelper;
 import fuzs.thinair.api.AirQualityLevel;
-import fuzs.thinair.client.handler.ClientAirBubbleTracker;
+import fuzs.thinair.client.renderer.entity.layers.RespiratorRenderer;
 import fuzs.thinair.init.ModRegistry;
 import fuzs.thinair.world.level.block.SafetyLanternBlock;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.model.HumanoidModel;
+import net.minecraft.client.model.geom.EntityModelSet;
+import net.minecraft.client.model.geom.builders.CubeDeformation;
+import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
+import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 
 public class ThinAirClient implements ClientModConstructor {
-
-    @Override
-    public void onConstructMod() {
-        registerHandlers();
-    }
-
-    private static void registerHandlers() {
-        ClientChunkEvents.LOAD.register(ClientAirBubbleTracker::onChunkLoad);
-        ClientLevelTickEvents.END.register(ClientAirBubbleTracker::onEndLevelTick);
-        ClientLevelEvents.UNLOAD.register(ClientAirBubbleTracker::onLevelUnload);
-    }
 
     @Override
     public void onRegisterItemModelProperties(ItemModelPropertiesContext context) {
@@ -57,5 +51,18 @@ public class ThinAirClient implements ClientModConstructor {
     @Override
     public void onRegisterBlockRenderTypes(RenderTypesContext<Block> context) {
         context.registerRenderType(RenderType.cutout(), ModRegistry.SIGNAL_TORCH_BLOCK.get(), ModRegistry.WALL_SIGNAL_TORCH_BLOCK.get(), ModRegistry.SAFETY_LANTERN_BLOCK.get());
+    }
+
+    @Override
+    public void onRegisterLayerDefinitions(LayerDefinitionsContext context) {
+        context.registerLayerDefinition(RespiratorRenderer.PLAYER_RESPIRATOR_LAYER, () -> LayerDefinition.create(HumanoidModel.createMesh(new CubeDeformation(1.02F), 0.0F), 64, 32));
+    }
+
+    @Override
+    public void onRegisterResourcePackReloadListeners(AddReloadListenersContext context) {
+        context.registerReloadListener("respirator_model", (ResourceManagerReloadListener) resourceManager -> {
+            EntityModelSet entityModels = Minecraft.getInstance().getEntityModels();
+            RespiratorRenderer.bakeModel(entityModels);
+        });
     }
 }

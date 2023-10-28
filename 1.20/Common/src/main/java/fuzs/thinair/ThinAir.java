@@ -1,7 +1,9 @@
 package fuzs.thinair;
 
+import fuzs.puzzleslib.api.core.v1.ContentRegistrationFlags;
 import fuzs.puzzleslib.api.core.v1.ModConstructor;
 import fuzs.puzzleslib.api.core.v1.context.CreativeModeTabContext;
+import fuzs.puzzleslib.api.event.v1.entity.living.LivingEvents;
 import fuzs.puzzleslib.api.event.v1.entity.living.LivingHurtCallback;
 import fuzs.puzzleslib.api.event.v1.entity.player.PlayerInteractEvents;
 import fuzs.puzzleslib.api.event.v1.level.ServerChunkEvents;
@@ -12,7 +14,8 @@ import fuzs.puzzleslib.api.item.v2.CreativeModeTabConfigurator;
 import fuzs.puzzleslib.api.network.v3.NetworkHandlerV3;
 import fuzs.thinair.advancements.ModAdvancementTriggers;
 import fuzs.thinair.handler.DrownedAttackHandler;
-import fuzs.thinair.handler.ServerAirBubbleTracker;
+import fuzs.thinair.handler.AirBubbleTracker;
+import fuzs.thinair.handler.TickAirHandler;
 import fuzs.thinair.init.ModRegistry;
 import fuzs.thinair.network.ClientboundChunkAirQualityMessage;
 import fuzs.thinair.world.level.block.SignalTorchBlock;
@@ -55,10 +58,12 @@ public class ThinAir implements ModConstructor {
             injectLootPool(identifier, addPool, BuiltInLootTables.STRONGHOLD_CORRIDOR, ModRegistry.SAFETY_LANTERN_STRONGHOLD_LOOT_TABLE);
         });
         PlayerInteractEvents.USE_BLOCK.register(SignalTorchBlock::onUseBlock);
-        ServerChunkEvents.LOAD.register(ServerAirBubbleTracker::onChunkLoad);
-        ServerLevelEvents.UNLOAD.register(ServerAirBubbleTracker::onLevelUnload);
-        ServerLevelTickEvents.END.register(ServerAirBubbleTracker::consumeReqdChunksServer);
+        ServerChunkEvents.LOAD.register(AirBubbleTracker::onChunkLoad);
+        ServerLevelEvents.UNLOAD.register(AirBubbleTracker::onLevelUnload);
+        ServerLevelTickEvents.END.register(AirBubbleTracker::onEndLevelTick);
         LivingHurtCallback.EVENT.register(DrownedAttackHandler::onLivingHurt);
+        LivingEvents.BREATHE.register(TickAirHandler::onLivingBreathe);
+        ServerChunkEvents.WATCH.register(AirBubbleTracker::onChunkWatch);
     }
 
     private static void injectLootPool(ResourceLocation identifier, Consumer<LootPool> addPool, ResourceLocation builtInLootTable, ResourceLocation injectedLootTable) {
@@ -76,6 +81,11 @@ public class ThinAir implements ModConstructor {
             output.accept(ModRegistry.SOULFIRE_BOTTLE_ITEM.get());
             output.accept(ModRegistry.SAFETY_LANTERN_ITEM.get());
         }));
+    }
+
+    @Override
+    public ContentRegistrationFlags[] getContentRegistrationFlags() {
+        return new ContentRegistrationFlags[]{ContentRegistrationFlags.COPY_TAG_RECIPES};
     }
 
     public static ResourceLocation id(String path) {

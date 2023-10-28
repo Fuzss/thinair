@@ -34,8 +34,7 @@
   },
 
   "mixins": [
-    "${modId}.common.mixins.json",
-    "${modId}.fabric.mixins.json"
+    "${modId}.common.mixins.json"
   ],
 
   "depends": {
@@ -46,6 +45,10 @@
     "cardinal-components-chunk": "*",
     "minecraft": "${minecraftVersion}",
     "java": ">=17"
+  },
+
+  "recommends": {
+    "trinkets": "*"
   },
 
   "custom": {
