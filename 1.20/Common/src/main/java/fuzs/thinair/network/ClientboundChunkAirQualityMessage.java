@@ -2,7 +2,7 @@ package fuzs.thinair.network;
 
 import fuzs.puzzleslib.api.network.v3.ClientMessageListener;
 import fuzs.puzzleslib.api.network.v3.ClientboundMessage;
-import fuzs.thinair.api.AirQualityLevel;
+import fuzs.thinair.api.v1.AirQualityLevel;
 import fuzs.thinair.init.ModRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -27,7 +27,7 @@ public record ClientboundChunkAirQualityMessage(ChunkPos chunkPos, Map<BlockPos,
                     ModRegistry.AIR_BUBBLE_POSITIONS_CAPABILITY.maybeGet(chunk).ifPresent(capability -> {
                         final Map<BlockPos, AirQualityLevel> airBubblePositions = capability.getAirBubblePositions();
                         switch (message.mode) {
-                            case REPLACE_ALL -> {
+                            case REPLACE -> {
                                 airBubblePositions.clear();
                                 airBubblePositions.putAll(message.airBubblePositions);
                             }
@@ -45,6 +45,6 @@ public record ClientboundChunkAirQualityMessage(ChunkPos chunkPos, Map<BlockPos,
     }
 
     public enum Mode {
-        REPLACE_ALL, REMOVE, ADD
+        REPLACE, REMOVE, ADD
     }
 }

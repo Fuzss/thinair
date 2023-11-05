@@ -11,7 +11,7 @@ import fuzs.thinair.handler.AirBubbleTracker;
 import fuzs.thinair.init.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.effect.MobEffectUtil;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -114,7 +114,7 @@ public class AirHelper {
             return AirProtectionSource.INHERENT;
         }
 
-        if (entity.hasEffect(MobEffects.WATER_BREATHING)) {
+        if (MobEffectUtil.hasWaterBreathing(entity)) {
             return AirProtectionSource.WATER_BREATHING;
         }
 

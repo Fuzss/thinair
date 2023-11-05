@@ -59,6 +59,7 @@ public class ThinAir implements ModConstructor {
         });
         PlayerInteractEvents.USE_BLOCK.register(SignalTorchBlock::onUseBlock);
         ServerChunkEvents.LOAD.register(AirBubbleTracker::onChunkLoad);
+        ServerChunkEvents.UNLOAD.register(AirBubbleTracker::onChunkUnload);
         ServerLevelEvents.UNLOAD.register(AirBubbleTracker::onLevelUnload);
         ServerLevelTickEvents.END.register(AirBubbleTracker::onEndLevelTick);
         LivingHurtCallback.EVENT.register(DrownedAttackHandler::onLivingHurt);

@@ -1,4 +1,4 @@
-package fuzs.thinair.api;
+package fuzs.thinair.api.v1;
 
 import fuzs.thinair.helper.AirQualityHelperImpl;
 import net.minecraft.world.entity.LivingEntity;

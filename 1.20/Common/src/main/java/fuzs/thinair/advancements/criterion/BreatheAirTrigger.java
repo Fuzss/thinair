@@ -3,7 +3,7 @@ package fuzs.thinair.advancements.criterion;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import fuzs.thinair.ThinAir;
-import fuzs.thinair.api.AirQualityLevel;
+import fuzs.thinair.api.v1.AirQualityLevel;
 import net.minecraft.advancements.critereon.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;

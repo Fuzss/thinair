@@ -4,7 +4,7 @@ import fuzs.puzzleslib.api.data.v1.AbstractRecipeProvider;
 import fuzs.puzzleslib.api.data.v1.recipes.CopyTagShapelessRecipeBuilder;
 import fuzs.thinair.ThinAir;
 import fuzs.thinair.advancements.criterion.BreatheAirTrigger;
-import fuzs.thinair.api.AirQualityLevel;
+import fuzs.thinair.api.v1.AirQualityLevel;
 import fuzs.thinair.init.ModRegistry;
 import net.minecraft.advancements.critereon.ChangeDimensionTrigger;
 import net.minecraft.advancements.critereon.ContextAwarePredicate;

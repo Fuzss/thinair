@@ -1,7 +1,7 @@
 package fuzs.thinair.world.item;
 
-import fuzs.thinair.api.AirQualityHelper;
-import fuzs.thinair.api.AirQualityLevel;
+import fuzs.thinair.api.v1.AirQualityHelper;
+import fuzs.thinair.api.v1.AirQualityLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;

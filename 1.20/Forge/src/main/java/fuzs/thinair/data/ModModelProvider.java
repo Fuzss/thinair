@@ -2,7 +2,7 @@ package fuzs.thinair.data;
 
 import fuzs.puzzleslib.api.data.v1.AbstractModelProvider;
 import fuzs.thinair.ThinAir;
-import fuzs.thinair.api.AirQualityLevel;
+import fuzs.thinair.api.v1.AirQualityLevel;
 import fuzs.thinair.init.ModRegistry;
 import fuzs.thinair.world.level.block.SafetyLanternBlock;
 import net.minecraft.resources.ResourceLocation;

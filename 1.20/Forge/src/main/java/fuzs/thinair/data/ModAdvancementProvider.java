@@ -3,7 +3,7 @@ package fuzs.thinair.data;
 import fuzs.thinair.advancements.criterion.BreatheAirTrigger;
 import fuzs.thinair.advancements.criterion.SignalificateTorchTrigger;
 import fuzs.thinair.advancements.criterion.UseSoulfireBecauseItDoesntTriggerVanillaForSomeReasonTrigger;
-import fuzs.thinair.api.AirQualityLevel;
+import fuzs.thinair.api.v1.AirQualityLevel;
 import fuzs.thinair.init.ModRegistry;
 import fuzs.thinair.world.level.block.SafetyLanternBlock;
 import net.minecraft.advancements.*;

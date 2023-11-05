@@ -1,7 +1,7 @@
 package fuzs.thinair.helper;
 
-import fuzs.thinair.api.AirQualityHelper;
-import fuzs.thinair.api.AirQualityLevel;
+import fuzs.thinair.api.v1.AirQualityHelper;
+import fuzs.thinair.api.v1.AirQualityLevel;
 import fuzs.thinair.capability.AirBubblePositionsCapability;
 import fuzs.thinair.config.CommonConfig;
 import fuzs.thinair.init.ModRegistry;

@@ -1,4 +1,4 @@
-package fuzs.thinair.api;
+package fuzs.thinair.api.v1;
 
 import fuzs.thinair.ThinAir;
 import fuzs.thinair.config.CommonConfig;

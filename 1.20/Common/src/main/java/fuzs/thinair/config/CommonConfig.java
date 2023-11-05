@@ -2,7 +2,7 @@ package fuzs.thinair.config;
 
 import com.mojang.datafixers.util.Pair;
 import fuzs.thinair.ThinAir;
-import fuzs.thinair.api.AirQualityLevel;
+import fuzs.thinair.api.v1.AirQualityLevel;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.ForgeConfigSpec;
 import org.jetbrains.annotations.Nullable;

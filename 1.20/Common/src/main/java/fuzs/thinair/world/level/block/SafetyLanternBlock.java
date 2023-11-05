@@ -1,7 +1,7 @@
 package fuzs.thinair.world.level.block;
 
-import fuzs.thinair.api.AirQualityHelper;
-import fuzs.thinair.api.AirQualityLevel;
+import fuzs.thinair.api.v1.AirQualityHelper;
+import fuzs.thinair.api.v1.AirQualityLevel;
 import fuzs.thinair.init.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

@@ -8,6 +8,7 @@ The format is based on [Keep a Changelog].
 - Added support for Curios and Trinkets mods
 ### Fixed
 - Fixed respirator not working when equipped
+- Fixed conduit power failing to behave like water breathing
 
 ## [v4.0.0-1.19.2] - 2023-06-25
 - Ported to Minecraft 1.19.2
