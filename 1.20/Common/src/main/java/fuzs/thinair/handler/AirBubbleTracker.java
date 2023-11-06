@@ -35,7 +35,7 @@ public class AirBubbleTracker {
                     // need to remove this
                     AirQualityLevel removed = capability.getAirBubblePositions().remove(pos);
                     if (removed == null) {
-                        ThinAir.LOGGER.warn("Didn't remove any air bubbles at {}", pos);
+                        ThinAir.LOGGER.debug("Didn't remove any air bubbles at {}", pos);
                     } else {
                         chunk.setUnsaved(true);
                         ThinAir.NETWORK.sendToAllTracking(chunk, new ClientboundChunkAirQualityMessage(chunk.getPos(), Map.of(pos, removed), ClientboundChunkAirQualityMessage.Mode.REMOVE));
@@ -46,7 +46,7 @@ public class AirBubbleTracker {
                 if (airQualityLevel != null) {
                     AirQualityLevel clobbered = capability.getAirBubblePositions().put(pos, airQualityLevel);
                     if (clobbered != null) {
-                        ThinAir.LOGGER.warn("Clobbered air bubble at {}: {}", pos, clobbered);
+                        ThinAir.LOGGER.debug("Clobbered air bubble at {}: {}", pos, clobbered);
                     }
                     chunk.setUnsaved(true);
                     ThinAir.NETWORK.sendToAllTracking(chunk, new ClientboundChunkAirQualityMessage(chunk.getPos(), Map.of(pos, airQualityLevel), ClientboundChunkAirQualityMessage.Mode.ADD));

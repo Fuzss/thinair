@@ -1,11 +1,10 @@
 package fuzs.thinair.capability;
 
-import com.google.common.collect.Maps;
 import fuzs.thinair.api.v1.AirQualityLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.*;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class AirBubblePositionsCapabilityImpl implements AirBubblePositionsCapability {
@@ -13,7 +12,7 @@ public class AirBubblePositionsCapabilityImpl implements AirBubblePositionsCapab
 
     private int skipCountLeft;
 
-    private Map<BlockPos, AirQualityLevel> airBubbleEntries = Maps.newHashMap();
+    private Map<BlockPos, AirQualityLevel> airBubbleEntries = new LinkedHashMap<>();
 
     @Override
     public Map<BlockPos, AirQualityLevel> getAirBubblePositions() {
@@ -50,7 +49,7 @@ public class AirBubblePositionsCapabilityImpl implements AirBubblePositionsCapab
     public void read(CompoundTag tag) {
         ListTag positions = tag.getList(TAG_POSITIONS, Tag.TAG_COMPOUND);
         byte[] qualities = tag.getByteArray(TAG_QUALITY);
-        this.airBubbleEntries = new HashMap<>(positions.size());
+        this.airBubbleEntries = new LinkedHashMap<>(positions.size());
         for (int i = 0; i < positions.size(); i++) {
             this.airBubbleEntries.put(NbtUtils.readBlockPos(positions.getCompound(i)), AirQualityLevel.values()[qualities[i]]);
         }

@@ -13,6 +13,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 
+import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 
 public class AirQualityHelperImpl implements AirQualityHelper {
@@ -33,11 +35,12 @@ public class AirQualityHelperImpl implements AirQualityHelper {
                 ChunkPos posInChunk = new ChunkPos(chunkAtCenter.x + x, chunkAtCenter.z + z);
                 Optional<AirBubblePositionsCapability> optional = Optional.ofNullable(level.getChunkSource().getChunkNow(posInChunk.x, posInChunk.z)).flatMap(ModRegistry.AIR_BUBBLE_POSITIONS_CAPABILITY::maybeGet);
                 if (optional.isPresent()) {
-                    AirBubblePositionsCapability capability = optional.get();
-                    for (BlockPos pos : capability.getAirBubblePositions().keySet()) {
-                        AirQualityLevel airQualityLevel = capability.getAirBubblePositions().get(pos);
-                        if (bestAirBubbleQuality == null || airQualityLevel != null && airQualityLevel.isBetterThan(bestAirBubbleQuality)) {
-                            double distanceSq = new Vec3(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5).distanceToSqr(location);
+                    for (Map.Entry<BlockPos, AirQualityLevel> entry : optional.get().getAirBubblePositions().entrySet()) {
+                        BlockPos blockPos = entry.getKey();
+                        AirQualityLevel airQualityLevel = entry.getValue();
+                        Objects.requireNonNull(airQualityLevel, "air quality level is null");
+                        if (bestAirBubbleQuality == null || airQualityLevel.isBetterThan(bestAirBubbleQuality)) {
+                            double distanceSq = new Vec3(blockPos.getX() + 0.5, blockPos.getY() + 0.5, blockPos.getZ() + 0.5).distanceToSqr(location);
                             if (distanceSq < Math.pow(airQualityLevel.getAirProviderRadius(), 2.0)) {
                                 if (airQualityLevel == AirQualityLevel.GREEN) {
                                     return AirQualityLevel.GREEN;
