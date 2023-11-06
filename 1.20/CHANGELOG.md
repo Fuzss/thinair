@@ -3,6 +3,10 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog].
 
+## [v8.1.1-1.20.1] - 2023-11-06
+### Fixed
+- Fixed crash when checking air quality
+
 ## [v8.1.0-1.20.1] - 2023-11-05
 ### Changed
 - Only selected entities are now affected by the new air mechanics, by default this includes the player and humanoid mobs such as villagers and pillagers

@@ -36,11 +36,14 @@ public class AirQualityHelperImpl implements AirQualityHelper {
                     AirBubblePositionsCapability capability = optional.get();
                     for (BlockPos pos : capability.getAirBubblePositions().keySet()) {
                         AirQualityLevel airQualityLevel = capability.getAirBubblePositions().get(pos);
-                        if (bestAirBubbleQuality == null || airQualityLevel.isBetterThan(bestAirBubbleQuality)) {
+                        if (bestAirBubbleQuality == null || airQualityLevel != null && airQualityLevel.isBetterThan(bestAirBubbleQuality)) {
                             double distanceSq = new Vec3(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5).distanceToSqr(location);
                             if (distanceSq < Math.pow(airQualityLevel.getAirProviderRadius(), 2.0)) {
-                                if (airQualityLevel == AirQualityLevel.GREEN) return AirQualityLevel.GREEN;
-                                bestAirBubbleQuality = airQualityLevel;
+                                if (airQualityLevel == AirQualityLevel.GREEN) {
+                                    return AirQualityLevel.GREEN;
+                                } else {
+                                    bestAirBubbleQuality = airQualityLevel;
+                                }
                             }
                         }
                     }
