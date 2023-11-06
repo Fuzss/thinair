@@ -15,9 +15,11 @@ public interface CommonAbstractions {
 
     default Optional<ItemStack> findEquippedItem(LivingEntity entity, TagKey<Item> tagKey) {
         for (EquipmentSlot equipmentSlot : EquipmentSlot.values()) {
-            ItemStack itemStack = entity.getItemBySlot(equipmentSlot);
-            if (itemStack.is(tagKey) && Mob.getEquipmentSlotForItem(itemStack) == equipmentSlot) {
-                return Optional.of(itemStack);
+            if (equipmentSlot != EquipmentSlot.MAINHAND) {
+                ItemStack itemStack = entity.getItemBySlot(equipmentSlot);
+                if (itemStack.is(tagKey) && Mob.getEquipmentSlotForItem(itemStack) == equipmentSlot) {
+                    return Optional.of(itemStack);
+                }
             }
         }
         return Optional.empty();

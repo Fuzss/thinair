@@ -15,7 +15,8 @@ public class ForgeAbstractions implements CommonAbstractions {
     @Override
     public Optional<ItemStack> findEquippedItem(LivingEntity entity, TagKey<Item> tagKey) {
         if (ModLoaderEnvironment.INSTANCE.isModLoaded("curios")) {
-            return CuriosApi.getCuriosHelper().findFirstCurio(entity, itemStack -> itemStack.is(tagKey)).map(SlotResult::stack);
+            return CuriosApi.getCuriosHelper().findFirstCurio(entity, itemStack -> itemStack.is(tagKey)).map(SlotResult::stack)
+                    .or(() -> CommonAbstractions.super.findEquippedItem(entity, tagKey));
         } else {
             return CommonAbstractions.super.findEquippedItem(entity, tagKey);
         }

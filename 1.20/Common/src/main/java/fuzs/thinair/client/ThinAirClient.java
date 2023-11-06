@@ -4,6 +4,7 @@ import fuzs.puzzleslib.api.client.core.v1.ClientModConstructor;
 import fuzs.puzzleslib.api.client.core.v1.context.ItemModelPropertiesContext;
 import fuzs.puzzleslib.api.client.core.v1.context.LayerDefinitionsContext;
 import fuzs.puzzleslib.api.client.core.v1.context.RenderTypesContext;
+import fuzs.puzzleslib.api.core.v1.ModLoaderEnvironment;
 import fuzs.puzzleslib.api.core.v1.context.AddReloadListenersContext;
 import fuzs.thinair.ThinAir;
 import fuzs.thinair.api.v1.AirQualityHelper;
@@ -20,7 +21,7 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
-import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
+import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
@@ -60,9 +61,11 @@ public class ThinAirClient implements ClientModConstructor {
 
     @Override
     public void onRegisterResourcePackReloadListeners(AddReloadListenersContext context) {
-        context.registerReloadListener("respirator_model", (ResourceManagerReloadListener) resourceManager -> {
-            EntityModelSet entityModels = Minecraft.getInstance().getEntityModels();
-            RespiratorRenderer.bakeModel(entityModels);
-        });
+        if (ModLoaderEnvironment.INSTANCE.isModLoaded("curios") || ModLoaderEnvironment.INSTANCE.isModLoaded("trinkets")) {
+            context.registerReloadListener("respirator_model", (ResourceManager resourceManager) -> {
+                EntityModelSet entityModels = Minecraft.getInstance().getEntityModels();
+                RespiratorRenderer.bakeModel(entityModels);
+            });
+        }
     }
 }

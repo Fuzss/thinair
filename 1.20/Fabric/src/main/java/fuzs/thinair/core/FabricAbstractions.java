@@ -16,7 +16,8 @@ public class FabricAbstractions implements CommonAbstractions {
     public Optional<ItemStack> findEquippedItem(LivingEntity entity, TagKey<Item> tagKey) {
         if (ModLoaderEnvironment.INSTANCE.isModLoaded("trinkets")) {
             return TrinketsApi.getTrinketComponent(entity).flatMap(component -> component.getEquipped(itemStack -> itemStack.is(tagKey))
-                    .stream().findFirst().map(Tuple::getB));
+                    .stream().findFirst().map(Tuple::getB))
+                    .or(() -> CommonAbstractions.super.findEquippedItem(entity, tagKey));
         } else {
             return CommonAbstractions.super.findEquippedItem(entity, tagKey);
         }
