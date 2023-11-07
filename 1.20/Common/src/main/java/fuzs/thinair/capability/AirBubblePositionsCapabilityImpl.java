@@ -6,6 +6,7 @@ import net.minecraft.nbt.*;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class AirBubblePositionsCapabilityImpl implements AirBubblePositionsCapability {
     public static final String TAG_POSITIONS = "Positions", TAG_QUALITY = "AirQuality", TAG_SKIP_COUNT_LEFT = "SkipCountLeft";
@@ -34,9 +35,11 @@ public class AirBubblePositionsCapabilityImpl implements AirBubblePositionsCapab
         ListTag positions = new ListTag();
         byte[] qualitiesArr = new byte[this.airBubbleEntries.size()];
         int i = 0;
-        for (BlockPos pos : this.airBubbleEntries.keySet()) {
-            AirQualityLevel airQualityLevel = this.airBubbleEntries.get(pos);
-            positions.add(NbtUtils.writeBlockPos(pos));
+        for (Map.Entry<BlockPos, AirQualityLevel> entry : this.airBubbleEntries.entrySet()) {
+            BlockPos blockPos = entry.getKey();
+            AirQualityLevel airQualityLevel = entry.getValue();
+            Objects.requireNonNull(airQualityLevel, "air quality level is null");
+            positions.add(NbtUtils.writeBlockPos(blockPos));
             qualitiesArr[i] = (byte) airQualityLevel.ordinal();
             i++;
         }
@@ -49,10 +52,11 @@ public class AirBubblePositionsCapabilityImpl implements AirBubblePositionsCapab
     public void read(CompoundTag tag) {
         ListTag positions = tag.getList(TAG_POSITIONS, Tag.TAG_COMPOUND);
         byte[] qualities = tag.getByteArray(TAG_QUALITY);
-        this.airBubbleEntries = new LinkedHashMap<>(positions.size());
+        Map<BlockPos, AirQualityLevel> airBubbleEntries = new LinkedHashMap<>(positions.size());
         for (int i = 0; i < positions.size(); i++) {
-            this.airBubbleEntries.put(NbtUtils.readBlockPos(positions.getCompound(i)), AirQualityLevel.values()[qualities[i]]);
+            airBubbleEntries.put(NbtUtils.readBlockPos(positions.getCompound(i)), AirQualityLevel.values()[qualities[i]]);
         }
+        this.airBubbleEntries = airBubbleEntries;
         this.skipCountLeft = tag.getInt(TAG_SKIP_COUNT_LEFT);
     }
 }
