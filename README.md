@@ -31,6 +31,7 @@ Blocks that create a certain air quality around themselves independently of the 
 ### Breathing Equipment
 Lastly equipment that supplies air while surrounded by yellow air quality like the respirator is controlled via the `thinair:breathing_equipment` item tag. 
 There is an additional `thinair:heavy_breathing_equipment` item tag offering protection from red air, which is empty by default though.
+
 Both tags can be applied to any item that can be equipped with all four armor slots and slots registered via Trinkets / Curios being supported. 
 If the item has a durability bar it will occasionally receive damage.
 
