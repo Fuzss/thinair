@@ -3,6 +3,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog].
 
+## [v8.1.4-1.20.1] - 2023-01-24
+### Added
+- Add `thinair:heavy_breathing_utility` item tag for equipment that can protect from red air quality, the tag is empty by default
+### Fixed
+- Fix breathing equipment not breaking and getting negative durability values
+
 ## [v8.1.3-1.20.1] - 2023-11-07
 ### Fixed
 - Third time is a charm: fix crash when checking air quality

@@ -5,11 +5,12 @@ import fuzs.thinair.config.CommonConfig;
 import fuzs.thinair.core.CommonAbstractions;
 import fuzs.thinair.init.ModRegistry;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.effect.MobEffectUtil;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.block.Block;
@@ -19,14 +20,12 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Locale;
-import java.util.Optional;
 
 public enum AirQualityLevel implements StringRepresentable {
     /**
-     * Full freedom to breathe
+     * Full freedom to breathe.
      */
     GREEN(true, true) {
-
         @Override
         boolean isProtected(LivingEntity entity) {
             return false;
@@ -38,10 +37,9 @@ public enum AirQualityLevel implements StringRepresentable {
         }
     },
     /**
-     * No loss, no gain
+     * No loss, no gain.
      */
     BLUE(true, false) {
-
         @Override
         boolean isProtected(LivingEntity entity) {
             return false;
@@ -53,46 +51,34 @@ public enum AirQualityLevel implements StringRepresentable {
         }
     },
     /**
-     * Slowly lose oxygen
+     * Slowly loose oxygen.
      */
-    YELLOW(false, false) {
-
-        @Override
-        boolean isProtected(LivingEntity entity) {
-            if (super.isProtected(entity)) return true;
-            Optional<ItemStack> optional = CommonAbstractions.INSTANCE.findEquippedItem(entity, ModRegistry.BREATHING_EQUIPMENT_ITEM_TAG);
-            if (optional.isPresent()) {
-                ItemStack itemStack = optional.get();
-                if (itemStack.isDamageableItem() && !entity.level().isClientSide && entity.level().getGameTime() % (20 * 15) == 0) {
-                    itemStack.hurt(1, entity.getRandom(), entity instanceof ServerPlayer player ? player : null);
-                }
-                return true;
-            }
-            return false;
-        }
-
+    YELLOW(false, false, ModRegistry.BREATHING_EQUIPMENT_ITEM_TAG) {
         @Override
         int getAirAmount(LivingEntity entity) {
             return entity.level().getGameTime() % 4 == 0 ? super.getAirAmount(entity) : 0;
         }
     },
     /**
-     * Completely unable to breathe (like underwater)
+     * Completely unable to breathe (like underwater).
      */
-    RED(false, false);
+    RED(false, false, ModRegistry.HEAVY_BREATHING_EQUIPMENT_ITEM_TAG);
 
     public final boolean canBreathe;
     public final boolean canRefillAir;
-    private final TagKey<Block> tag;
+    @Nullable
+    private final TagKey<Item> breathingEquipment;
+    private final TagKey<Block> airProviders;
 
     AirQualityLevel(boolean canBreathe, boolean canRefillAir) {
-        this.canBreathe = canBreathe;
-        this.canRefillAir = canRefillAir;
-        this.tag = TagKey.create(Registries.BLOCK, ThinAir.id(this.getSerializedName() + "_air_providers"));
+        this(canBreathe, canRefillAir, null);
     }
 
-    public TagKey<Block> getAirProvidersTag() {
-        return this.tag;
+    AirQualityLevel(boolean canBreathe, boolean canRefillAir, @Nullable TagKey<Item> breathingEquipment) {
+        this.canBreathe = canBreathe;
+        this.canRefillAir = canRefillAir;
+        this.breathingEquipment = breathingEquipment;
+        this.airProviders = TagKey.create(Registries.BLOCK, ThinAir.id(this.getSerializedName() + "_air_providers"));
     }
 
     @Nullable
@@ -108,11 +94,15 @@ public enum AirQualityLevel implements StringRepresentable {
             return null;
         }
         for (AirQualityLevel airQualityLevel : AirQualityLevel.values()) {
-            if (blockState.is(airQualityLevel.tag)) {
+            if (blockState.is(airQualityLevel.airProviders)) {
                 return airQualityLevel;
             }
         }
         return null;
+    }
+
+    public TagKey<Block> getAirProvidersTag() {
+        return this.airProviders;
     }
 
     public double getAirProviderRadius() {
@@ -142,7 +132,21 @@ public enum AirQualityLevel implements StringRepresentable {
     }
 
     boolean isProtected(LivingEntity entity) {
-        return MobEffectUtil.hasWaterBreathing(entity) || entity.isUsingItem() && entity.getUseItem().is(ModRegistry.AIR_REFILLER_ITEM_TAG);
+        return MobEffectUtil.hasWaterBreathing(entity) || entity.isUsingItem() && entity.getUseItem().is(ModRegistry.AIR_REFILLER_ITEM_TAG) || this.isProtectedViaBreathingEquipment(entity);
+    }
+
+    private boolean isProtectedViaBreathingEquipment(LivingEntity entity) {
+        if (this.breathingEquipment != null) {
+            ItemStack itemStack = CommonAbstractions.INSTANCE.findEquippedItem(entity, this.breathingEquipment);
+            if (!itemStack.isEmpty() && entity.level().getGameTime() % (20 * 15) == 0) {
+                itemStack.hurtAndBreak(1, entity, (LivingEntity livingEntity) -> {
+                    livingEntity.broadcastBreakEvent(EquipmentSlot.HEAD);
+                });
+            }
+            return !itemStack.isEmpty();
+        } else {
+            return false;
+        }
     }
 
     int getAirAmount(LivingEntity entity) {

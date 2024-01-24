@@ -15,6 +15,7 @@ public class ModItemTagsProvider extends AbstractTagProvider.Items {
     @Override
     protected void addTags(HolderLookup.Provider provider) {
         this.tag(ModRegistry.BREATHING_EQUIPMENT_ITEM_TAG).add(ModRegistry.RESPIRATOR_ITEM.get());
+        this.tag(ModRegistry.HEAVY_BREATHING_EQUIPMENT_ITEM_TAG);
         this.tag(ModRegistry.AIR_REFILLER_ITEM_TAG).add(ModRegistry.AIR_BLADDER_ITEM.get(), ModRegistry.REINFORCED_AIR_BLADDER_ITEM.get());
         this.tag(TypedTagFactory.ITEM.curios("head")).add(ModRegistry.RESPIRATOR_ITEM.get());
         this.tag(TypedTagFactory.ITEM.trinkets("head/face")).add(ModRegistry.RESPIRATOR_ITEM.get());

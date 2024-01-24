@@ -34,12 +34,12 @@ public class ThinAirForge {
 
     @SubscribeEvent
     public static void onConstructMod(final FMLConstructModEvent evt) {
-        // TODO remove when this has been re-enabled in Puzzles Lib
-        registerEventInvokers();
         ForgeModRegistry.touch();
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, CommonConfig.SPEC);
         ModConstructor.construct(ThinAir.MOD_ID, ThinAir::new);
         registerCapabilities();
+        // TODO remove when this has been re-enabled in Puzzles Lib
+        registerEventInvokers();
         registerIntegrations();
         DataProviderHelper.registerDataProviders(ThinAir.MOD_ID, ModAdvancementProvider::new, ModBlockLootProvider::new, ModModelProvider::new, ModBlockTagsProvider::new, ModChestLootProvider::new, ModEntityTypeTagsProvider::new, ModRecipeProvider::new);
         DataProviderHelper.registerDataProviders(ThinAir.MOD_ID, ModItemTagsProvider::new);
@@ -91,7 +91,9 @@ public class ThinAirForge {
     }
 
     private static void registerCapabilities() {
-        ForgeCapabilityHelper.setCapabilityToken(ModRegistry.AIR_BUBBLE_POSITIONS_CAPABILITY, new CapabilityToken<AirBubblePositionsCapability>() {});
+        ForgeCapabilityHelper.setCapabilityToken(ModRegistry.AIR_BUBBLE_POSITIONS_CAPABILITY, new CapabilityToken<>() {
+            // NO-OP
+        });
     }
 
     private static void registerIntegrations() {

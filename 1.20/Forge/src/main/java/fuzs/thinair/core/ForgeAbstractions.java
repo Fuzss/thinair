@@ -8,15 +8,13 @@ import net.minecraft.world.item.ItemStack;
 import top.theillusivec4.curios.api.CuriosApi;
 import top.theillusivec4.curios.api.SlotResult;
 
-import java.util.Optional;
-
 public class ForgeAbstractions implements CommonAbstractions {
 
     @Override
-    public Optional<ItemStack> findEquippedItem(LivingEntity entity, TagKey<Item> tagKey) {
+    public ItemStack findEquippedItem(LivingEntity entity, TagKey<Item> tagKey) {
         if (ModLoaderEnvironment.INSTANCE.isModLoaded("curios")) {
             return CuriosApi.getCuriosHelper().findFirstCurio(entity, itemStack -> itemStack.is(tagKey)).map(SlotResult::stack)
-                    .or(() -> CommonAbstractions.super.findEquippedItem(entity, tagKey));
+                    .orElseGet(() -> CommonAbstractions.super.findEquippedItem(entity, tagKey));
         } else {
             return CommonAbstractions.super.findEquippedItem(entity, tagKey);
         }

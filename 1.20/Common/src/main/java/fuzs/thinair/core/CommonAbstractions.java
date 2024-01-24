@@ -8,20 +8,18 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
-import java.util.Optional;
-
 public interface CommonAbstractions {
     CommonAbstractions INSTANCE = ServiceProviderHelper.load(CommonAbstractions.class);
 
-    default Optional<ItemStack> findEquippedItem(LivingEntity entity, TagKey<Item> tagKey) {
+    default ItemStack findEquippedItem(LivingEntity entity, TagKey<Item> tagKey) {
         for (EquipmentSlot equipmentSlot : EquipmentSlot.values()) {
             if (equipmentSlot != EquipmentSlot.MAINHAND) {
                 ItemStack itemStack = entity.getItemBySlot(equipmentSlot);
                 if (itemStack.is(tagKey) && Mob.getEquipmentSlotForItem(itemStack) == equipmentSlot) {
-                    return Optional.of(itemStack);
+                    return itemStack;
                 }
             }
         }
-        return Optional.empty();
+        return ItemStack.EMPTY;
     }
 }

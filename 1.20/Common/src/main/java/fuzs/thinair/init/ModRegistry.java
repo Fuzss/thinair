@@ -40,6 +40,7 @@ public class ModRegistry {
     
     static final BoundTagFactory TAGS = BoundTagFactory.make(ThinAir.MOD_ID);
     public static final TagKey<Item> BREATHING_EQUIPMENT_ITEM_TAG = TAGS.registerItemTag("breathing_equipment");
+    public static final TagKey<Item> HEAVY_BREATHING_EQUIPMENT_ITEM_TAG = TAGS.registerItemTag("heavy_breathing_equipment");
     public static final TagKey<Item> AIR_REFILLER_ITEM_TAG = TAGS.registerItemTag("air_refiller");
     public static final TagKey<EntityType<?>> AIR_QUALITY_SENSITIVE_ENTITY_TYPE_TAG = TAGS.registerEntityTypeTag("air_quality_sensitive");
     
