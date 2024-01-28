@@ -1,0 +1,100 @@
+{
+  "variants": {
+    "air_quality=blue,hanging=false,locked=false,waterlogged=false": {
+      "model": "thinair:block/lantern_blue"
+    },
+    "air_quality=blue,hanging=false,locked=false,waterlogged=true": {
+      "model": "thinair:block/lantern_blue"
+    },
+    "air_quality=blue,hanging=false,locked=true,waterlogged=false": {
+      "model": "thinair:block/lantern_blue"
+    },
+    "air_quality=blue,hanging=false,locked=true,waterlogged=true": {
+      "model": "thinair:block/lantern_blue"
+    },
+    "air_quality=blue,hanging=true,locked=false,waterlogged=false": {
+      "model": "thinair:block/lantern_blue_hanging"
+    },
+    "air_quality=blue,hanging=true,locked=false,waterlogged=true": {
+      "model": "thinair:block/lantern_blue_hanging"
+    },
+    "air_quality=blue,hanging=true,locked=true,waterlogged=false": {
+      "model": "thinair:block/lantern_blue_hanging"
+    },
+    "air_quality=blue,hanging=true,locked=true,waterlogged=true": {
+      "model": "thinair:block/lantern_blue_hanging"
+    },
+    "air_quality=green,hanging=false,locked=false,waterlogged=false": {
+      "model": "thinair:block/lantern_green"
+    },
+    "air_quality=green,hanging=false,locked=false,waterlogged=true": {
+      "model": "thinair:block/lantern_green"
+    },
+    "air_quality=green,hanging=false,locked=true,waterlogged=false": {
+      "model": "thinair:block/lantern_green"
+    },
+    "air_quality=green,hanging=false,locked=true,waterlogged=true": {
+      "model": "thinair:block/lantern_green"
+    },
+    "air_quality=green,hanging=true,locked=false,waterlogged=false": {
+      "model": "thinair:block/lantern_green_hanging"
+    },
+    "air_quality=green,hanging=true,locked=false,waterlogged=true": {
+      "model": "thinair:block/lantern_green_hanging"
+    },
+    "air_quality=green,hanging=true,locked=true,waterlogged=false": {
+      "model": "thinair:block/lantern_green_hanging"
+    },
+    "air_quality=green,hanging=true,locked=true,waterlogged=true": {
+      "model": "thinair:block/lantern_green_hanging"
+    },
+    "air_quality=red,hanging=false,locked=false,waterlogged=false": {
+      "model": "thinair:block/lantern_red"
+    },
+    "air_quality=red,hanging=false,locked=false,waterlogged=true": {
+      "model": "thinair:block/lantern_red"
+    },
+    "air_quality=red,hanging=false,locked=true,waterlogged=false": {
+      "model": "thinair:block/lantern_red"
+    },
+    "air_quality=red,hanging=false,locked=true,waterlogged=true": {
+      "model": "thinair:block/lantern_red"
+    },
+    "air_quality=red,hanging=true,locked=false,waterlogged=false": {
+      "model": "thinair:block/lantern_red_hanging"
+    },
+    "air_quality=red,hanging=true,locked=false,waterlogged=true": {
+      "model": "thinair:block/lantern_red_hanging"
+    },
+    "air_quality=red,hanging=true,locked=true,waterlogged=false": {
+      "model": "thinair:block/lantern_red_hanging"
+    },
+    "air_quality=red,hanging=true,locked=true,waterlogged=true": {
+      "model": "thinair:block/lantern_red_hanging"
+    },
+    "air_quality=yellow,hanging=false,locked=false,waterlogged=false": {
+      "model": "thinair:block/lantern_yellow"
+    },
+    "air_quality=yellow,hanging=false,locked=false,waterlogged=true": {
+      "model": "thinair:block/lantern_yellow"
+    },
+    "air_quality=yellow,hanging=false,locked=true,waterlogged=false": {
+      "model": "thinair:block/lantern_yellow"
+    },
+    "air_quality=yellow,hanging=false,locked=true,waterlogged=true": {
+      "model": "thinair:block/lantern_yellow"
+    },
+    "air_quality=yellow,hanging=true,locked=false,waterlogged=false": {
+      "model": "thinair:block/lantern_yellow_hanging"
+    },
+    "air_quality=yellow,hanging=true,locked=false,waterlogged=true": {
+      "model": "thinair:block/lantern_yellow_hanging"
+    },
+    "air_quality=yellow,hanging=true,locked=true,waterlogged=false": {
+      "model": "thinair:block/lantern_yellow_hanging"
+    },
+    "air_quality=yellow,hanging=true,locked=true,waterlogged=true": {
+      "model": "thinair:block/lantern_yellow_hanging"
+    }
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "thinair:block/signal_torch"
+    }
+  }
+}

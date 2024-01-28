@@ -1,0 +1,35 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "C": [
+      {
+        "item": "minecraft:charcoal"
+      },
+      {
+        "item": "minecraft:coal"
+      }
+    ],
+    "G": {
+      "tag": "forge:glass"
+    },
+    "S": [
+      {
+        "item": "minecraft:soul_sand"
+      },
+      {
+        "item": "minecraft:soul_soil"
+      }
+    ]
+  },
+  "pattern": [
+    " C ",
+    "GSG",
+    " G "
+  ],
+  "result": {
+    "count": 3,
+    "item": "thinair:soulfire_bottle"
+  },
+  "show_notification": true
+}

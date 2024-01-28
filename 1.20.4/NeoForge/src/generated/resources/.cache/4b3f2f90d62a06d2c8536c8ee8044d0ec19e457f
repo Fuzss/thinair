@@ -1,0 +1,7 @@
+// 1.20.1	2023-11-05T22:35:31.284198	Tags for minecraft:block mod id thinair
+9ecfe852b00399649deddc2aec3554aa8379088a data/minecraft/tags/blocks/mineable/pickaxe.json
+de55269b3c1ed4c9db82ca056d5430821ac8a34b data/minecraft/tags/blocks/wall_post_override.json
+a4600d3554ae8d083dc06065c421f91fc9789fde data/thinair/tags/blocks/blue_air_providers.json
+51a99c4bd2399fdf5f54ee4573037fd0ccc504e4 data/thinair/tags/blocks/green_air_providers.json
+6678915d6179bcb44defbad6cf15d181bd5b6c4c data/thinair/tags/blocks/red_air_providers.json
+35133e95f1c8fdd7a1c21afcc231fc0bffefb9a8 data/thinair/tags/blocks/yellow_air_providers.json

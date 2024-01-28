@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "thinair:air_bladder"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    },
+    "in_dangerous_air": {
+      "conditions": {
+        "AirQualities": [
+          "yellow",
+          "red"
+        ]
+      },
+      "trigger": "thinair:breathe_bad_air"
+    }
+  },
+  "requirements": [
+    [
+      "in_dangerous_air",
+      "has_the_recipe"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "thinair:air_bladder"
+    ]
+  },
+  "sends_telemetry_event": false
+}

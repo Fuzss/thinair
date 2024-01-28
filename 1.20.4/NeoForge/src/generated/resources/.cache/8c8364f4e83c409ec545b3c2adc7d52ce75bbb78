@@ -1,0 +1,6 @@
+// 1.20.1	2024-01-24T20:21:24.126369	Tags for minecraft:item mod id vanilla
+9a92ac97b3053348145c4320ca1ff0f7a964d5a0 data/curios/tags/items/head.json
+be4a24d32e22a0f08d697d38c36cd09fabbbc7f1 data/thinair/tags/items/air_refiller.json
+9a92ac97b3053348145c4320ca1ff0f7a964d5a0 data/thinair/tags/items/breathing_equipment.json
+35133e95f1c8fdd7a1c21afcc231fc0bffefb9a8 data/thinair/tags/items/heavy_breathing_equipment.json
+9a92ac97b3053348145c4320ca1ff0f7a964d5a0 data/trinkets/tags/items/head/face.json
