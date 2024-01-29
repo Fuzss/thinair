@@ -1,0 +1,33 @@
+{
+  "parent": "minecraft:blue_air",
+  "criteria": {
+    "used_soulfire": {
+      "conditions": {
+        "item": {
+          "items": [
+            "thinair:soulfire_bottle"
+          ]
+        }
+      },
+      "trigger": "thinair:used_soulfire"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.thinair.soulfire_bottle.description"
+    },
+    "frame": "goal",
+    "icon": {
+      "item": "thinair:soulfire_bottle"
+    },
+    "title": {
+      "translate": "advancements.thinair.soulfire_bottle.title"
+    }
+  },
+  "requirements": [
+    [
+      "used_soulfire"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

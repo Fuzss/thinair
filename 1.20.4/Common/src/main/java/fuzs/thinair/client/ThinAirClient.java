@@ -21,16 +21,18 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 
 public class ThinAirClient implements ClientModConstructor {
+    public static final ResourceLocation AIR_QUALITY_LEVEL_MODEL_PROPRTY = ThinAir.id("air_quality_level");
 
     @Override
     public void onRegisterItemModelProperties(ItemModelPropertiesContext context) {
-        context.registerItemProperty(ThinAir.id("air_quality_level"), (ItemStack itemStack, ClientLevel level, LivingEntity entity, int seed) -> {
+        context.registerItemProperty(AIR_QUALITY_LEVEL_MODEL_PROPRTY, (ItemStack itemStack, ClientLevel level, LivingEntity entity, int seed) -> {
             CompoundTag compoundTag = itemStack.getTag();
             if (compoundTag != null && compoundTag.contains(SafetyLanternBlock.TAG_AIR_QUALITY_LEVEL, Tag.TAG_INT)) {
                 int airQualityLevel = compoundTag.getInt(SafetyLanternBlock.TAG_AIR_QUALITY_LEVEL);
@@ -46,12 +48,12 @@ public class ThinAirClient implements ClientModConstructor {
                 airQualityAtLocation = AirQualityLevel.YELLOW;
             }
             return airQualityAtLocation.getItemModelProperty();
-        }, ModRegistry.SAFETY_LANTERN_BLOCK.get());
+        }, ModRegistry.SAFETY_LANTERN_BLOCK.value());
     }
 
     @Override
     public void onRegisterBlockRenderTypes(RenderTypesContext<Block> context) {
-        context.registerRenderType(RenderType.cutout(), ModRegistry.SIGNAL_TORCH_BLOCK.get(), ModRegistry.WALL_SIGNAL_TORCH_BLOCK.get(), ModRegistry.SAFETY_LANTERN_BLOCK.get());
+        context.registerRenderType(RenderType.cutout(), ModRegistry.SIGNAL_TORCH_BLOCK.value(), ModRegistry.WALL_SIGNAL_TORCH_BLOCK.value(), ModRegistry.SAFETY_LANTERN_BLOCK.value());
     }
 
     @Override

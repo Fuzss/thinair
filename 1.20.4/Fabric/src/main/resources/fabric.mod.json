@@ -9,7 +9,7 @@
   "authors": [
     "${modAuthor}"
   ],
-  
+
   "contact": {
     "homepage": "${modPageUrl}",
     "issues": "${modIssueUrl}",
@@ -27,9 +27,6 @@
     ],
     "client": [
       "${clientEntryPoint}"
-    ],
-    "cardinal-components": [
-      "fuzs.puzzleslib.api.capability.v2.initializer.ChunkComponentInitializerImpl"
     ]
   },
 
@@ -42,19 +39,11 @@
     "fabricloader": ">=${minFabricVersion}",
     "fabric-api": ">=${minFabricApiVersion}",
     "puzzleslib": ">=${minPuzzlesVersion}",
-    "cardinal-components-base": "*",
-    "cardinal-components-chunk": "*",
     "minecraft": "${minecraftVersion}",
     "java": ">=17"
   },
 
   "recommends": {
     "trinkets": "*"
-  },
-
-  "custom": {
-    "cardinal-components": [
-      "${modId}:air_bubble_positions"
-    ]
   }
 }

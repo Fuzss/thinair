@@ -1,0 +1,28 @@
+{
+  "overrides": [
+    {
+      "model": "thinair:item/safety_lantern_green",
+      "predicate": {
+        "thinair:air_quality_level": 0.0
+      }
+    },
+    {
+      "model": "thinair:item/safety_lantern_blue",
+      "predicate": {
+        "thinair:air_quality_level": 0.1
+      }
+    },
+    {
+      "model": "thinair:item/safety_lantern_yellow",
+      "predicate": {
+        "thinair:air_quality_level": 0.2
+      }
+    },
+    {
+      "model": "thinair:item/safety_lantern_red",
+      "predicate": {
+        "thinair:air_quality_level": 0.3
+      }
+    }
+  ]
+}

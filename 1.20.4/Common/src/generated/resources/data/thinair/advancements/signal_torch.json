@@ -1,0 +1,35 @@
+{
+  "parent": "minecraft:root",
+  "criteria": {
+    "signalify_torch": {
+      "conditions": {
+        "location": {
+          "block": {
+            "blocks": [
+              "minecraft:torch",
+              "minecraft:wall_torch"
+            ]
+          }
+        }
+      },
+      "trigger": "thinair:signalify_torch"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.thinair.signal_torch.description"
+    },
+    "icon": {
+      "item": "minecraft:torch"
+    },
+    "title": {
+      "translate": "advancements.thinair.signal_torch.title"
+    }
+  },
+  "requirements": [
+    [
+      "signalify_torch"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

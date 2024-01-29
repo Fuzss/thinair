@@ -1,0 +1,28 @@
+{
+  "variants": {
+    "air_quality=blue,hanging=false": {
+      "model": "thinair:block/safety_lantern_blue"
+    },
+    "air_quality=blue,hanging=true": {
+      "model": "thinair:block/safety_lantern_blue_hanging"
+    },
+    "air_quality=green,hanging=false": {
+      "model": "thinair:block/safety_lantern_green"
+    },
+    "air_quality=green,hanging=true": {
+      "model": "thinair:block/safety_lantern_green_hanging"
+    },
+    "air_quality=red,hanging=false": {
+      "model": "thinair:block/safety_lantern_red"
+    },
+    "air_quality=red,hanging=true": {
+      "model": "thinair:block/safety_lantern_red_hanging"
+    },
+    "air_quality=yellow,hanging=false": {
+      "model": "thinair:block/safety_lantern_yellow"
+    },
+    "air_quality=yellow,hanging=true": {
+      "model": "thinair:block/safety_lantern_yellow_hanging"
+    }
+  }
+}

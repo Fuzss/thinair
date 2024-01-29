@@ -1,0 +1,43 @@
+{
+  "parent": "minecraft:root",
+  "criteria": {
+    "breathe_bad_air": {
+      "conditions": {
+        "air_qualities": [
+          "yellow",
+          "red"
+        ]
+      },
+      "trigger": "thinair:breathe_air"
+    },
+    "using_air_bladder": {
+      "conditions": {
+        "item": {
+          "tag": "thinair:air_refiller"
+        }
+      },
+      "trigger": "minecraft:using_item"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.thinair.air_bladder.description"
+    },
+    "icon": {
+      "item": "thinair:air_bladder",
+      "nbt": "{Damage:0}"
+    },
+    "title": {
+      "translate": "advancements.thinair.air_bladder.title"
+    }
+  },
+  "requirements": [
+    [
+      "breathe_bad_air"
+    ],
+    [
+      "using_air_bladder"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

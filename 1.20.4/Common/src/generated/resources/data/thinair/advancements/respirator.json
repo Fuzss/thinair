@@ -1,0 +1,44 @@
+{
+  "parent": "minecraft:root",
+  "criteria": {
+    "breathe_yellow_air": {
+      "conditions": {
+        "air_qualities": [
+          "yellow"
+        ]
+      },
+      "trigger": "thinair:breathe_air"
+    },
+    "has_breathing_equipment": {
+      "conditions": {
+        "items": [
+          {
+            "tag": "thinair:breathing_equipment"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.thinair.respirator.description"
+    },
+    "icon": {
+      "item": "thinair:respirator",
+      "nbt": "{Damage:0}"
+    },
+    "title": {
+      "translate": "advancements.thinair.respirator.title"
+    }
+  },
+  "requirements": [
+    [
+      "breathe_yellow_air"
+    ],
+    [
+      "has_breathing_equipment"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

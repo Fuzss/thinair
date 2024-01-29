@@ -1,0 +1,13 @@
+// 1.20.4	2024-01-29T23:09:36.095289	Recipes
+82b78e24d612d85dcc49ace074e37244717487d2 data/thinair/advancements/recipes/tools/air_bladder.json
+16d6f6a7ce4915349c703f77f69e894fea902e0a data/thinair/advancements/recipes/tools/reinforced_air_bladder.json
+bad5bddc5f77a921614d0e6a85106ea5d94e71d1 data/thinair/advancements/recipes/tools/respirator.json
+b2d08b61e153da30811462e56b64201b5a6d1f7f data/thinair/advancements/recipes/tools/safety_lantern.json
+1bcd104432394f3a0256ff8c1db15f629488b8ce data/thinair/advancements/recipes/tools/soulfire_bottle.json
+9cb1f0b9b31167ba0d85918ca45d0531b113d9e3 data/thinair/advancements/recipes/tools/soulfire_bottle_from_glass.json
+31039969197196d17541290f4cc6a302fa32ea68 data/thinair/recipes/air_bladder.json
+5a9d3beab100a06e17833952ff6db8382fc27836 data/thinair/recipes/reinforced_air_bladder.json
+0950362f6eee822f0acc6547765ea98cf18b384a data/thinair/recipes/respirator.json
+b0051a1ee4c033bc5f1238be2230040c7606d4dd data/thinair/recipes/safety_lantern.json
+f0b664766624699d0491bcb66e7c217a8c26e3ca data/thinair/recipes/soulfire_bottle.json
+28b70703cb22e5f2420c042c1463b922179ad047 data/thinair/recipes/soulfire_bottle_from_glass.json

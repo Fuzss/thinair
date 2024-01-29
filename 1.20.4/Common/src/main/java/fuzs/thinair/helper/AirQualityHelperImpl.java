@@ -33,9 +33,9 @@ public class AirQualityHelperImpl implements AirQualityHelper {
         for (int x = -2; x <= 2; x++) {
             for (int z = -2; z <= 2; z++) {
                 ChunkPos posInChunk = new ChunkPos(chunkAtCenter.x + x, chunkAtCenter.z + z);
-                Optional<AirBubblePositionsCapability> optional = Optional.ofNullable(level.getChunkSource().getChunkNow(posInChunk.x, posInChunk.z)).flatMap(ModRegistry.AIR_BUBBLE_POSITIONS_CAPABILITY::maybeGet);
+                Optional<AirBubblePositionsCapability> optional = Optional.ofNullable(level.getChunkSource().getChunkNow(posInChunk.x, posInChunk.z)).map(ModRegistry.AIR_BUBBLE_POSITIONS_CAPABILITY::get);
                 if (optional.isPresent()) {
-                    for (Map.Entry<BlockPos, AirQualityLevel> entry : optional.get().getAirBubblePositions().entrySet()) {
+                    for (Map.Entry<BlockPos, AirQualityLevel> entry : optional.get().getAirBubblePositionsView().entrySet()) {
                         BlockPos blockPos = entry.getKey();
                         AirQualityLevel airQualityLevel = entry.getValue();
                         Objects.requireNonNull(airQualityLevel, "air quality level is null");

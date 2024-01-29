@@ -3,6 +3,10 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog].
 
+## [v8.1.5-1.20.1] - 2023-01-29
+### Fixed
+- Fix respirator not having any effect on Fabric
+
 ## [v8.1.4-1.20.1] - 2023-01-24
 ### Added
 - Add `thinair:heavy_breathing_utility` item tag for equipment that can protect from red air quality, the tag is empty by default

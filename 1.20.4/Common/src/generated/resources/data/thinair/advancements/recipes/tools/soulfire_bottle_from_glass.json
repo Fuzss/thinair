@@ -1,0 +1,28 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "thinair:soulfire_bottle_from_glass"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    },
+    "in_nether": {
+      "conditions": {
+        "to": "minecraft:the_nether"
+      },
+      "trigger": "minecraft:changed_dimension"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "in_nether"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "thinair:soulfire_bottle_from_glass"
+    ]
+  }
+}

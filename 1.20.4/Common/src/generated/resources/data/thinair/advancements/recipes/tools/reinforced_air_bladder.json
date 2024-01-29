@@ -1,0 +1,34 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_air_bladder": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "thinair:air_bladder"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "thinair:reinforced_air_bladder"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_air_bladder"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "thinair:reinforced_air_bladder"
+    ]
+  }
+}

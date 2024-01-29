@@ -1,5 +1,6 @@
 package fuzs.thinair.world.level.block;
 
+import fuzs.thinair.ThinAir;
 import fuzs.thinair.api.v1.AirQualityHelper;
 import fuzs.thinair.api.v1.AirQualityLevel;
 import fuzs.thinair.init.ModRegistry;
@@ -35,41 +36,41 @@ import org.jetbrains.annotations.Nullable;
 public class SafetyLanternBlock extends LanternBlock {
     public static final EnumProperty<AirQualityLevel> AIR_QUALITY = EnumProperty.create("air_quality", AirQualityLevel.class);
     public static final BooleanProperty LOCKED = BlockStateProperties.LOCKED;
-    public static final String TAG_AIR_QUALITY_LEVEL = "AirQualityLevel";
+    public static final String TAG_AIR_QUALITY_LEVEL = ThinAir.id("air_quality_level").toLanguageKey();
 
     public SafetyLanternBlock(Properties props) {
         super(props);
         this.registerDefaultState(this.defaultBlockState().setValue(AIR_QUALITY, AirQualityLevel.GREEN).setValue(LOCKED, false));
     }
 
-    private static BlockState setAirQuality(Level level, BlockPos pos, BlockState template) {
-        return template.setValue(AIR_QUALITY, AirQualityHelper.INSTANCE.getAirQualityAtLocation(level, Vec3.atCenterOf(pos)));
+    private static BlockState setAirQuality(Level level, BlockPos pos, BlockState blockState) {
+        return blockState.setValue(AIR_QUALITY, AirQualityHelper.INSTANCE.getAirQualityAtLocation(level, Vec3.atCenterOf(pos)));
     }
 
     public static ItemStack getDisplayItemStack(AirQualityLevel airQualityLevel) {
-        ItemStack itemStack = new ItemStack(ModRegistry.SAFETY_LANTERN_BLOCK.get());
+        ItemStack itemStack = new ItemStack(ModRegistry.SAFETY_LANTERN_BLOCK.value());
         itemStack.getOrCreateTag().putInt(TAG_AIR_QUALITY_LEVEL, airQualityLevel.ordinal());
         return itemStack;
     }
 
     @Override
-    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> definition) {
-        super.createBlockStateDefinition(definition);
-        definition.add(AIR_QUALITY, LOCKED);
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+        super.createBlockStateDefinition(builder);
+        builder.add(AIR_QUALITY, LOCKED);
     }
 
     @Nullable
     @Override
-    public BlockState getStateForPlacement(BlockPlaceContext ctx) {
-        FluidState fluidState = ctx.getLevel().getFluidState(ctx.getClickedPos());
+    public BlockState getStateForPlacement(BlockPlaceContext context) {
+        FluidState fluidState = context.getLevel().getFluidState(context.getClickedPos());
 
         BlockState blockState = this.defaultBlockState().setValue(WATERLOGGED, fluidState.getType() == Fluids.WATER);
-        blockState = setAirQuality(ctx.getLevel(), ctx.getClickedPos(), blockState);
+        blockState = setAirQuality(context.getLevel(), context.getClickedPos(), blockState);
 
-        for (Direction direction : ctx.getNearestLookingDirections()) {
+        for (Direction direction : context.getNearestLookingDirections()) {
             if (direction.getAxis() == Direction.Axis.Y) {
                 BlockState out = blockState.setValue(HANGING, direction == Direction.UP);
-                if (out.canSurvive(ctx.getLevel(), ctx.getClickedPos())) {
+                if (out.canSurvive(context.getLevel(), context.getClickedPos())) {
                     return out;
                 }
             }
@@ -79,19 +80,19 @@ public class SafetyLanternBlock extends LanternBlock {
     }
 
     @Override
-    public void setPlacedBy(Level pLevel, BlockPos pPos, BlockState pState, @Nullable LivingEntity pPlacer, ItemStack pStack) {
-        pLevel.scheduleTick(pPos, this, 20, TickPriority.NORMAL);
+    public void setPlacedBy(Level level, BlockPos blockPos, BlockState blockState, @Nullable LivingEntity placer, ItemStack itemStack) {
+        level.scheduleTick(blockPos, this, 20, TickPriority.NORMAL);
     }
 
     @Override
-    public InteractionResult use(BlockState bs, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult pHit) {
-        ItemStack itemUsed = player.getItemInHand(hand);
+    public InteractionResult use(BlockState blockState, Level level, BlockPos pos, Player player, InteractionHand interactionHand, BlockHitResult hitResult) {
+        ItemStack itemUsed = player.getItemInHand(interactionHand);
 
         AirQualityLevel lockedAirQuality = null;
         AirQualityLevel presentLockedAirQuality = null;
         boolean strippedDye = false;
-        if (bs.getValue(LOCKED)) {
-            presentLockedAirQuality = bs.getValue(AIR_QUALITY);
+        if (blockState.getValue(LOCKED)) {
+            presentLockedAirQuality = blockState.getValue(AIR_QUALITY);
         }
 
         if (itemUsed.is(Items.GREEN_DYE) && presentLockedAirQuality != AirQualityLevel.GREEN) {
@@ -102,55 +103,55 @@ public class SafetyLanternBlock extends LanternBlock {
             lockedAirQuality = AirQualityLevel.YELLOW;
         } else if (itemUsed.is(Items.RED_DYE) && presentLockedAirQuality != AirQualityLevel.RED) {
             lockedAirQuality = AirQualityLevel.RED;
-        } else if (itemUsed.getItem() instanceof AxeItem && bs.getValue(LOCKED)) {
+        } else if (itemUsed.getItem() instanceof AxeItem && blockState.getValue(LOCKED)) {
             strippedDye = true;
         }
 
         boolean didAnything = false;
-        BlockState newBs = bs;
+        BlockState newBs = blockState;
         if (lockedAirQuality != null) {
             newBs = newBs.setValue(AIR_QUALITY, lockedAirQuality).setValue(LOCKED, true);
-            world.levelEvent(player, 3003, pos, 0);
+            level.levelEvent(player, 3003, pos, 0);
             if (!player.getAbilities().instabuild) {
                 itemUsed.shrink(1);
             }
 
             didAnything = true;
         } else if (strippedDye) {
-            world.playSound(player, pos, SoundEvents.AXE_SCRAPE, SoundSource.BLOCKS, 1.0F, 1.0F);
-            world.levelEvent(player, 3005, pos, 0);
-            itemUsed.hurtAndBreak(1, player, (player1) -> player1.broadcastBreakEvent(hand));
-            player.swing(hand);
+            level.playSound(player, pos, SoundEvents.AXE_SCRAPE, SoundSource.BLOCKS, 1.0F, 1.0F);
+            level.levelEvent(player, 3005, pos, 0);
+            itemUsed.hurtAndBreak(1, player, (player1) -> player1.broadcastBreakEvent(interactionHand));
+            player.swing(interactionHand);
             newBs = newBs.setValue(LOCKED, false);
-            newBs = setAirQuality(world, pos, newBs);
+            newBs = setAirQuality(level, pos, newBs);
 
             didAnything = true;
         }
 
-        world.setBlockAndUpdate(pos, newBs);
+        level.setBlockAndUpdate(pos, newBs);
 
         if (didAnything) {
-            return InteractionResult.sidedSuccess(world.isClientSide);
+            return InteractionResult.sidedSuccess(level.isClientSide);
         } else {
             return InteractionResult.PASS;
         }
     }
 
     @Override
-    public void tick(BlockState pState, ServerLevel pLevel, BlockPos pPos, RandomSource pRandom) {
-        pLevel.scheduleTick(pPos, this, 20, TickPriority.NORMAL);
-        if (!pState.getValue(LOCKED)) {
-            pLevel.setBlockAndUpdate(pPos, setAirQuality(pLevel, pPos, pState));
+    public void tick(BlockState blockState, ServerLevel serverLevel, BlockPos blockPos, RandomSource random) {
+        serverLevel.scheduleTick(blockPos, this, 20, TickPriority.NORMAL);
+        if (!blockState.getValue(LOCKED)) {
+            serverLevel.setBlockAndUpdate(blockPos, setAirQuality(serverLevel, blockPos, blockState));
         }
     }
 
     @Override
-    public boolean hasAnalogOutputSignal(BlockState pState) {
+    public boolean hasAnalogOutputSignal(BlockState blockState) {
         return true;
     }
 
     @Override
-    public int getAnalogOutputSignal(BlockState pState, Level pLevel, BlockPos pPos) {
-        return pState.getValue(AIR_QUALITY).getOutputSignal();
+    public int getAnalogOutputSignal(BlockState blockState, Level level, BlockPos blockPos) {
+        return blockState.getValue(AIR_QUALITY).getOutputSignal();
     }
 }

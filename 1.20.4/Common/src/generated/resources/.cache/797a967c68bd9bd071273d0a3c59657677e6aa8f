@@ -1,0 +1,8 @@
+// 1.20.4	2024-01-29T19:52:29.087903	Mod Chest Loot Provider
+3c9bf9357897b8a0e5fe8a4b3502e282a864c302 data/thinair/loot_tables/chest/inject/safety_lantern_dungeon.json
+54913204dd318693a862bbde2898c37ee16f04e2 data/thinair/loot_tables/chest/inject/safety_lantern_mineshaft.json
+d82e4d77527500adf2500bc048668ff86eb8a711 data/thinair/loot_tables/chest/inject/safety_lantern_stronghold.json
+6d3b44dd9ce5c77465e5070784279d2c8ec14440 data/thinair/loot_tables/chest/inject/soulfire_bottle_big_ruin.json
+e7d112887ecac81823bce366b3dad1121072e7db data/thinair/loot_tables/chest/inject/soulfire_bottle_buried.json
+76dc88b38363c7a8542bf1c51a1056868d0e944b data/thinair/loot_tables/chest/inject/soulfire_bottle_shipwreck.json
+910d36eb023704d7f8a025d3909aefad7d42a09e data/thinair/loot_tables/chest/inject/soulfire_bottle_small_ruin.json

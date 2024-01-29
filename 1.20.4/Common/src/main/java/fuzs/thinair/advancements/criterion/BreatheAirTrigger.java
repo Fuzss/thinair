@@ -1,68 +1,47 @@
 package fuzs.thinair.advancements.criterion;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import fuzs.thinair.ThinAir;
+import com.google.common.collect.ImmutableList;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import fuzs.thinair.api.v1.AirQualityLevel;
-import net.minecraft.advancements.critereon.*;
-import net.minecraft.resources.ResourceLocation;
+import fuzs.thinair.init.ModRegistry;
+import net.minecraft.advancements.Criterion;
+import net.minecraft.advancements.critereon.ContextAwarePredicate;
+import net.minecraft.advancements.critereon.EntityPredicate;
+import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.ExtraCodecs;
 
-import java.util.EnumSet;
-import java.util.Locale;
+import java.util.List;
+import java.util.Optional;
 
-public class BreatheAirTrigger extends SimpleCriterionTrigger<BreatheAirTrigger.Instance> {
-    private static final ResourceLocation ID = new ResourceLocation(ThinAir.MOD_ID, "breathe_bad_air");
-
-    private static final String TAG_AIR_QUALITIES = "AirQualities";
+public class BreatheAirTrigger extends SimpleCriterionTrigger<BreatheAirTrigger.TriggerInstance> {
 
     @Override
-    public ResourceLocation getId() {
-        return ID;
+    public Codec<TriggerInstance> codec() {
+        return TriggerInstance.CODEC;
     }
 
-    @Override
-    protected Instance createInstance(JsonObject json, ContextAwarePredicate predicate, DeserializationContext ctx) {
-
-        var allowedQualities = EnumSet.noneOf(AirQualityLevel.class);
-        for (var qualObj : json.getAsJsonArray(TAG_AIR_QUALITIES)) {
-            var qualStr = qualObj.getAsString();
-            allowedQualities.add(AirQualityLevel.valueOf(qualStr.toUpperCase(Locale.ROOT)));
-        }
-        return new Instance(predicate, allowedQualities);
+    public void trigger(ServerPlayer player, AirQualityLevel airQualityLevel) {
+        super.trigger(player, instance -> instance.matches(airQualityLevel));
     }
 
-    public void trigger(ServerPlayer player, AirQualityLevel qualityBreathed) {
-        super.trigger(player, inst -> inst.test(qualityBreathed));
-    }
+    public record TriggerInstance(Optional<ContextAwarePredicate> player,
+                                  Optional<List<AirQualityLevel>> allowedQualities) implements SimpleCriterionTrigger.SimpleInstance {
+        public static final Codec<TriggerInstance> CODEC = RecordCodecBuilder.create(
+                instance -> {
+                    return instance.group(
+                            ExtraCodecs.strictOptionalField(EntityPredicate.ADVANCEMENT_CODEC, "player").forGetter(TriggerInstance::player),
+                            ExtraCodecs.strictOptionalField(AirQualityLevel.CODEC.listOf(), "air_qualities").forGetter(TriggerInstance::allowedQualities)
+                    ).apply(instance, TriggerInstance::new);
+        });
 
-    public static class Instance extends AbstractCriterionTriggerInstance {
-        protected final EnumSet<AirQualityLevel> allowedQualities;
-
-        public Instance(ContextAwarePredicate predicate, EnumSet<AirQualityLevel> allowedQualities) {
-            super(ID, predicate);
-            this.allowedQualities = allowedQualities;
+        public static Criterion<TriggerInstance> breatheAir(AirQualityLevel... airQualityLevels) {
+            return ModRegistry.BREATHE_AIR_TRIGGER.value().createCriterion(new TriggerInstance(Optional.empty(), Optional.of(ImmutableList.copyOf(airQualityLevels))));
         }
 
-        @Override
-        public ResourceLocation getCriterion() {
-            return ID;
-        }
-
-        @Override
-        public JsonObject serializeToJson(SerializationContext ctx) {
-            var json = super.serializeToJson(ctx);
-
-            var qualities = new JsonArray();
-            for (var qual : this.allowedQualities) {
-                qualities.add(qual.getSerializedName());
-            }
-            json.add(TAG_AIR_QUALITIES, qualities);
-            return json;
-        }
-
-        private boolean test(AirQualityLevel qualityBreathed) {
-            return this.allowedQualities.contains(qualityBreathed);
+        public boolean matches(AirQualityLevel airQualityLevel) {
+            return this.allowedQualities.isEmpty() || this.allowedQualities.get().contains(airQualityLevel);
         }
     }
 }

@@ -9,8 +9,8 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public class WallSignalTorchBlock extends WallTorchBlock {
 
-    public WallSignalTorchBlock(Properties pProperties) {
-        super(pProperties, ParticleTypes.FLAME);
+    public WallSignalTorchBlock(Properties properties) {
+        super(ParticleTypes.FLAME, properties);
     }
 
     @Override

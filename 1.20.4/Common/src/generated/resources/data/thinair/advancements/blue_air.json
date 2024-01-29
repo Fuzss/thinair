@@ -1,0 +1,30 @@
+{
+  "parent": "minecraft:air_bladder",
+  "criteria": {
+    "breathe_blue_air": {
+      "conditions": {
+        "air_qualities": [
+          "blue"
+        ]
+      },
+      "trigger": "thinair:breathe_air"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.thinair.blue_air.description"
+    },
+    "icon": {
+      "item": "minecraft:soul_campfire"
+    },
+    "title": {
+      "translate": "advancements.thinair.blue_air.title"
+    }
+  },
+  "requirements": [
+    [
+      "breathe_blue_air"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

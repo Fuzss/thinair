@@ -1,0 +1,31 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "thinair:respirator"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    },
+    "in_dangerous_air": {
+      "conditions": {
+        "air_qualities": [
+          "yellow",
+          "red"
+        ]
+      },
+      "trigger": "thinair:breathe_air"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "in_dangerous_air"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "thinair:respirator"
+    ]
+  }
+}

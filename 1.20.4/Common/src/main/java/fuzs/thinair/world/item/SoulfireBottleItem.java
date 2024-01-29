@@ -1,6 +1,6 @@
 package fuzs.thinair.world.item;
 
-import fuzs.thinair.advancements.ModAdvancementTriggers;
+import fuzs.thinair.init.ModRegistry;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -24,6 +24,7 @@ public class SoulfireBottleItem extends Item {
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand interactionHand) {
         player.setAirSupply(player.getMaxAirSupply());
         ItemStack itemInHand = player.getItemInHand(interactionHand);
+        ItemStack itemInHandCopy = itemInHand.copy();
         if (!player.getAbilities().instabuild) {
             itemInHand.shrink(1);
         }
@@ -40,8 +41,8 @@ public class SoulfireBottleItem extends Item {
         }
 
         player.awardStat(Stats.ITEM_USED.get(this));
-        if (player instanceof ServerPlayer splayer) {
-            ModAdvancementTriggers.USE_SOULFIRE_BOTTLE.trigger(splayer);
+        if (player instanceof ServerPlayer) {
+            ModRegistry.USED_SOULFIRE_TRIGGER.value().trigger((ServerPlayer) player, itemInHandCopy);
         }
 
         return InteractionResultHolder.sidedSuccess(itemInHand, level.isClientSide);

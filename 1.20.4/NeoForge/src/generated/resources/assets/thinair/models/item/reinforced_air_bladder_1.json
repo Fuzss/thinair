@@ -1,6 +1,0 @@
-{
-  "parent": "minecraft:item/generated",
-  "textures": {
-    "layer0": "thinair:item/reinforced_air_bladder_1"
-  }
-}

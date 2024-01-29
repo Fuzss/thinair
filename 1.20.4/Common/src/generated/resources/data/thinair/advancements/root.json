@@ -1,0 +1,32 @@
+{
+  "criteria": {
+    "breathe_bad_air": {
+      "conditions": {
+        "air_qualities": [
+          "yellow",
+          "red"
+        ]
+      },
+      "trigger": "thinair:breathe_air"
+    }
+  },
+  "display": {
+    "background": "minecraft:textures/block/deepslate.png",
+    "description": {
+      "translate": "advancements.thinair.root.description"
+    },
+    "icon": {
+      "item": "thinair:safety_lantern",
+      "nbt": "{thinair.air_quality_level:3}"
+    },
+    "title": {
+      "translate": "advancements.thinair.root.title"
+    }
+  },
+  "requirements": [
+    [
+      "breathe_bad_air"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

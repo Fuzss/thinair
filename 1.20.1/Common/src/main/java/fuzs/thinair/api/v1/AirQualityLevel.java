@@ -20,6 +20,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Locale;
+import java.util.Objects;
 
 public enum AirQualityLevel implements StringRepresentable {
     /**
@@ -53,7 +54,7 @@ public enum AirQualityLevel implements StringRepresentable {
     /**
      * Slowly loose oxygen.
      */
-    YELLOW(false, false, ModRegistry.BREATHING_EQUIPMENT_ITEM_TAG) {
+    YELLOW(false, false, "breathing_equipment") {
         @Override
         int getAirAmount(LivingEntity entity) {
             return entity.level().getGameTime() % 4 == 0 ? super.getAirAmount(entity) : 0;
@@ -62,7 +63,7 @@ public enum AirQualityLevel implements StringRepresentable {
     /**
      * Completely unable to breathe (like underwater).
      */
-    RED(false, false, ModRegistry.HEAVY_BREATHING_EQUIPMENT_ITEM_TAG);
+    RED(false, false, "heavy_breathing_equipment");
 
     public final boolean canBreathe;
     public final boolean canRefillAir;
@@ -74,10 +75,12 @@ public enum AirQualityLevel implements StringRepresentable {
         this(canBreathe, canRefillAir, null);
     }
 
-    AirQualityLevel(boolean canBreathe, boolean canRefillAir, @Nullable TagKey<Item> breathingEquipment) {
+    AirQualityLevel(boolean canBreathe, boolean canRefillAir, @Nullable String breathingEquipment) {
         this.canBreathe = canBreathe;
         this.canRefillAir = canRefillAir;
-        this.breathingEquipment = breathingEquipment;
+        this.breathingEquipment = breathingEquipment != null ? TagKey.create(Registries.ITEM,
+                ThinAir.id(breathingEquipment)
+        ) : null;
         this.airProviders = TagKey.create(Registries.BLOCK, ThinAir.id(this.getSerializedName() + "_air_providers"));
     }
 
@@ -99,6 +102,11 @@ public enum AirQualityLevel implements StringRepresentable {
             }
         }
         return null;
+    }
+
+    public TagKey<Item> getBreathingEquipment() {
+        Objects.requireNonNull(this.breathingEquipment, "breathing equipment is null");
+        return this.breathingEquipment;
     }
 
     public TagKey<Block> getAirProvidersTag() {

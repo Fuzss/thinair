@@ -1,69 +1,66 @@
 package fuzs.thinair.config;
 
-import com.mojang.datafixers.util.Pair;
 import fuzs.thinair.ThinAir;
 import fuzs.thinair.api.v1.AirQualityLevel;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.common.ForgeConfigSpec;
+import net.neoforged.neoforge.common.ModConfigSpec;
+import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
 public class CommonConfig {
-    public static final ForgeConfigSpec SPEC;
+    public static final ModConfigSpec SPEC;
+    public static ModConfigSpec.ConfigValue<List<? extends String>> dimensions;
+    public static ModConfigSpec.BooleanValue enableSignalTorches;
+    public static ModConfigSpec.IntValue drownedChoking;
+    public static ModConfigSpec.DoubleValue blueAirProviderRadius;
+    public static ModConfigSpec.DoubleValue redAirProviderRadius;
+    public static ModConfigSpec.DoubleValue yellowAirProviderRadius;
+    public static ModConfigSpec.DoubleValue greenAirProviderRadius;
+    private static Map<ResourceLocation, DimensionEntry> dimensionEntries = null;
 
     static {
-        var specPair = new ForgeConfigSpec.Builder().configure(CommonConfig::new);
+        Pair<CommonConfig, ModConfigSpec> specPair = new ModConfigSpec.Builder().configure(CommonConfig::new);
         SPEC = specPair.getRight();
     }
 
-    public static ForgeConfigSpec.ConfigValue<List<? extends String>> dimensions;
+    public CommonConfig(ModConfigSpec.Builder builder) {
+        dimensions = builder.comment("Air qualities at different heights in different dimensions.",
+                        "The syntax is the dimension's resource location, the \"default\" air level in that dimension,",
+                        "then any number of height:airlevel pairs separated by commas.",
+                        "The air will have that quality starting at that height and above (until the next entry).",
+                        "The entries must be in ascending order of height.",
+                        "If a dimension doesn't have an entry here, it'll be assumed to be green everywhere."
+                )
+                .defineList("dimensions",
+                        Arrays.asList("minecraft:overworld=yellow,0:green,128:yellow",
+                                "minecraft:the_nether=yellow",
+                                "minecraft:the_end=red"
+                        ),
+                        o -> o instanceof String s && parseDimensionLine(s) != null
+                );
 
-    public static ForgeConfigSpec.BooleanValue enableSignalTorches;
-    public static ForgeConfigSpec.IntValue drownedChoking;
+        enableSignalTorches = builder.comment(
+                        "Whether to allow right-clicking torches to make them spray particle effects")
+                .define("enableSignalTorches", true);
 
-    public static ForgeConfigSpec.DoubleValue blueAirProviderRadius;
-    public static ForgeConfigSpec.DoubleValue redAirProviderRadius;
-    public static ForgeConfigSpec.DoubleValue yellowAirProviderRadius;
-    public static ForgeConfigSpec.DoubleValue greenAirProviderRadius;
-
-    private static Map<ResourceLocation, DimensionEntry> dimensionEntries = null;
-
-    public CommonConfig(ForgeConfigSpec.Builder builder) {
-        dimensions = builder
-            .comment("Air qualities at different heights in different dimensions.",
-                "The syntax is the dimension's resource location, the \"default\" air level in that dimension,",
-                "then any number of height:airlevel pairs separated by commas.",
-                "The air will have that quality starting at that height and above (until the next entry).",
-                "The entries must be in ascending order of height.",
-                "If a dimension doesn't have an entry here, it'll be assumed to be green everywhere.")
-            .defineList("dimensions", Arrays.asList(
-                "minecraft:overworld=yellow,0:green,128:yellow",
-                "minecraft:the_nether=yellow",
-                "minecraft:the_end=red"
-            ), o -> o instanceof String s && parseDimensionLine(s) != null);
-
-        enableSignalTorches = builder
-            .comment("Whether to allow right-clicking torches to make them spray particle effects")
-            .define("enableSignalTorches", true);
-
-        drownedChoking = builder
-            .comment("How much air a Drowned attack removes. Set to 0 to disable this feature.")
-            .defineInRange("drownedChoking", 100, 0, 72000);
+        drownedChoking = builder.comment("How much air a Drowned attack removes. Set to 0 to disable this feature.")
+                .defineInRange("drownedChoking", 100, 0, 72000);
 
         builder.push("Ranges");
-        yellowAirProviderRadius = builder
-                .comment("The radius in which all blocks defined in the yellow air providers tag project a bubble of air around them.")
-            .defineInRange("yellowAirProviderRadius", 6.0, 1.0, 32.0);
-        blueAirProviderRadius = builder
-            .comment("The radius in which all blocks defined in the blue air providers tag (usually soul fire related blocks) project a bubble of air around them.")
-            .defineInRange("blueAirProviderRadius", 6.0, 1.0, 32.0);
-        redAirProviderRadius = builder
-                .comment("The radius in which all blocks defined in the red air providers tag (usually lava related blocks) project a bubble of air around them.")
-            .defineInRange("redAirProviderRadius", 3.0, 1.0, 32.0);
-        greenAirProviderRadius = builder
-                .comment("The radius in which all blocks defined in the green air providers tag (usually various portal blocks) project a bubble of air around them.")
-            .defineInRange("greenAirProviderRadius", 9.0, 1.0, 32.0);
+        yellowAirProviderRadius = builder.comment(
+                        "The radius in which all blocks defined in the yellow air providers tag project a bubble of air around them.")
+                .defineInRange("yellowAirProviderRadius", 6.0, 1.0, 32.0);
+        blueAirProviderRadius = builder.comment(
+                        "The radius in which all blocks defined in the blue air providers tag (usually soul fire related blocks) project a bubble of air around them.")
+                .defineInRange("blueAirProviderRadius", 6.0, 1.0, 32.0);
+        redAirProviderRadius = builder.comment(
+                        "The radius in which all blocks defined in the red air providers tag (usually lava related blocks) project a bubble of air around them.")
+                .defineInRange("redAirProviderRadius", 3.0, 1.0, 32.0);
+        greenAirProviderRadius = builder.comment(
+                        "The radius in which all blocks defined in the green air providers tag (usually various portal blocks) project a bubble of air around them.")
+                .defineInRange("greenAirProviderRadius", 9.0, 1.0, 32.0);
         builder.pop();
     }
 
@@ -77,8 +74,10 @@ public class CommonConfig {
 
         var dimkey = ResourceLocation.tryParse(dimensionVals[0]);
         if (dimkey == null) {
-            ThinAir.LOGGER.warn("Couldn't parse dimension line {}: {} isn't a valid resource location", line,
-                dimensionVals[0]);
+            ThinAir.LOGGER.warn("Couldn't parse dimension line {}: {} isn't a valid resource location",
+                    line,
+                    dimensionVals[0]
+            );
             return null;
         }
 
@@ -87,8 +86,10 @@ public class CommonConfig {
         try {
             baseQuality = AirQualityLevel.valueOf(heightAndRest[0].toUpperCase(Locale.ROOT));
         } catch (IllegalArgumentException e) {
-            ThinAir.LOGGER.warn("Couldn't parse dimension line {}: {} isn't a valid base air quality", line,
-                heightAndRest[0]);
+            ThinAir.LOGGER.warn("Couldn't parse dimension line {}: {} isn't a valid base air quality",
+                    line,
+                    heightAndRest[0]
+            );
             return null;
         }
 
@@ -100,8 +101,9 @@ public class CommonConfig {
                 var pairStr = heightPairStr.split(":");
                 if (pairStr.length != 2) {
                     ThinAir.LOGGER.warn("Couldn't parse dimension line {}: couldn't use {} as a height entry",
-                        line,
-                        heightPairStr);
+                            line,
+                            heightPairStr
+                    );
                     return null;
                 }
 
@@ -109,8 +111,7 @@ public class CommonConfig {
                 try {
                     height = Integer.parseInt(pairStr[0]);
                 } catch (NumberFormatException e) {
-                    ThinAir.LOGGER.warn("Couldn't parse dimension line {}: {} isn't a valid int", line,
-                        pairStr[0]);
+                    ThinAir.LOGGER.warn("Couldn't parse dimension line {}: {} isn't a valid int", line, pairStr[0]);
                     return null;
                 }
                 if (prevHeight != null && height <= prevHeight) {
@@ -122,20 +123,18 @@ public class CommonConfig {
                 try {
                     quality = AirQualityLevel.valueOf(pairStr[1].toUpperCase(Locale.ROOT));
                 } catch (IllegalArgumentException e) {
-                    ThinAir.LOGGER.warn("Couldn't parse dimension line {}: {} isn't a valid air quality", line,
-                        pairStr[1]);
+                    ThinAir.LOGGER.warn("Couldn't parse dimension line {}: {} isn't a valid air quality",
+                            line,
+                            pairStr[1]
+                    );
                     return null;
                 }
 
-                heights.add(new Pair<>(height, quality));
+                heights.add(Pair.of(height, quality));
             }
         }
 
-        return new Pair<>(dimkey, new DimensionEntry(baseQuality, heights));
-    }
-
-    private record DimensionEntry(AirQualityLevel baseQuality, List<Pair<Integer, AirQualityLevel>> heights) {
-
+        return Pair.of(dimkey, new DimensionEntry(baseQuality, heights));
     }
 
     public static AirQualityLevel getAirQualityAtLevelByDimension(ResourceLocation dimension, int y) {
@@ -149,7 +148,7 @@ public class CommonConfig {
                     ThinAir.LOGGER.warn("Somehow managed to get a bad dimension config past the validator?!");
                     continue;
                 }
-                dimensionEntries.put(entry.getFirst(), entry.getSecond());
+                dimensionEntries.put(entry.getLeft(), entry.getRight());
             }
         }
 
@@ -158,13 +157,17 @@ public class CommonConfig {
             List<Pair<Integer, AirQualityLevel>> heights = entry.heights;
             for (int i = 0; i < heights.size(); i++) {
                 Pair<Integer, AirQualityLevel> heightPair = heights.get(heights.size() - i - 1);
-                if (y >= heightPair.getFirst()) {
-                    return heightPair.getSecond();
+                if (y >= heightPair.getLeft()) {
+                    return heightPair.getRight();
                 }
             }
             return entry.baseQuality;
         } else {
             return AirQualityLevel.GREEN;
         }
+    }
+
+    private record DimensionEntry(AirQualityLevel baseQuality, List<Pair<Integer, AirQualityLevel>> heights) {
+
     }
 }

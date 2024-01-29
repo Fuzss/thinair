@@ -1,0 +1,22 @@
+{
+  "overrides": [
+    {
+      "model": "thinair:item/reinforced_air_bladder_full",
+      "predicate": {
+        "minecraft:damage": 0.0
+      }
+    },
+    {
+      "model": "thinair:item/reinforced_air_bladder_used",
+      "predicate": {
+        "minecraft:damage": 0.33333334
+      }
+    },
+    {
+      "model": "thinair:item/reinforced_air_bladder_almost_empty",
+      "predicate": {
+        "minecraft:damage": 0.6666667
+      }
+    }
+  ]
+}

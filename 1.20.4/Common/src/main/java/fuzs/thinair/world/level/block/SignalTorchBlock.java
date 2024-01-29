@@ -1,7 +1,6 @@
 package fuzs.thinair.world.level.block;
 
 import fuzs.puzzleslib.api.event.v1.core.EventResultHolder;
-import fuzs.thinair.advancements.ModAdvancementTriggers;
 import fuzs.thinair.config.CommonConfig;
 import fuzs.thinair.init.ModRegistry;
 import net.minecraft.core.BlockPos;
@@ -23,8 +22,8 @@ import net.minecraft.world.phys.BlockHitResult;
 
 public class SignalTorchBlock extends TorchBlock {
 
-    public SignalTorchBlock(Properties pProperties) {
-        super(pProperties, ParticleTypes.FLAME);
+    public SignalTorchBlock(Properties properties) {
+        super(ParticleTypes.FLAME, properties);
     }
 
     @Override
@@ -49,19 +48,19 @@ public class SignalTorchBlock extends TorchBlock {
         Block nextBlock = null;
         float pitch = 1f;
         if (bs.is(Blocks.TORCH)) {
-            nextBlock = ModRegistry.SIGNAL_TORCH_BLOCK.get();
+            nextBlock = ModRegistry.SIGNAL_TORCH_BLOCK.value();
         } else if (bs.is(Blocks.WALL_TORCH)) {
-            nextBlock = ModRegistry.WALL_SIGNAL_TORCH_BLOCK.get();
-        } else if (bs.is(ModRegistry.SIGNAL_TORCH_BLOCK.get())) {
+            nextBlock = ModRegistry.WALL_SIGNAL_TORCH_BLOCK.value();
+        } else if (bs.is(ModRegistry.SIGNAL_TORCH_BLOCK.value())) {
             nextBlock = Blocks.TORCH;
             pitch = 0.8f;
-        } else if (bs.is(ModRegistry.WALL_SIGNAL_TORCH_BLOCK.get())) {
+        } else if (bs.is(ModRegistry.WALL_SIGNAL_TORCH_BLOCK.value())) {
             nextBlock = Blocks.WALL_TORCH;
             pitch = 0.8f;
         }
         if (nextBlock != null) {
-            if (player instanceof ServerPlayer splayer) {
-                ModAdvancementTriggers.SIGNALIFICATE_TORCH.trigger(splayer, pos);
+            if (player instanceof ServerPlayer) {
+                ModRegistry.SIGNALIFY_TORCH_TRIGGER.value().trigger((ServerPlayer) player, pos);
             }
 
             BlockState nextBs = nextBlock.defaultBlockState();

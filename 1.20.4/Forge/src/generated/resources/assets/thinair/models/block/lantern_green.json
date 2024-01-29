@@ -1,6 +1,0 @@
-{
-  "parent": "minecraft:block/template_lantern",
-  "textures": {
-    "lantern": "thinair:block/lantern_green"
-  }
-}
