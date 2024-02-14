@@ -1,5 +1,5 @@
 {
-  "parent": "minecraft:safety_lantern",
+  "parent": "thinair:safety_lantern",
   "criteria": {
     "blue": {
       "conditions": {

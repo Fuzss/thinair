@@ -1,5 +1,5 @@
 {
-  "parent": "minecraft:blue_air",
+  "parent": "thinair:blue_air",
   "criteria": {
     "used_soulfire": {
       "conditions": {

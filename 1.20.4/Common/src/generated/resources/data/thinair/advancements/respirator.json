@@ -1,5 +1,5 @@
 {
-  "parent": "minecraft:root",
+  "parent": "thinair:root",
   "criteria": {
     "breathe_yellow_air": {
       "conditions": {

@@ -1,5 +1,5 @@
 {
-  "parent": "minecraft:respirator",
+  "parent": "thinair:respirator",
   "criteria": {
     "breathe_red_air": {
       "conditions": {

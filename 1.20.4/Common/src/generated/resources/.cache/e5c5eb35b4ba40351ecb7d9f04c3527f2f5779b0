@@ -1,10 +1,10 @@
-// 1.20.4	2024-01-29T19:46:22.629291	Advancements
-77ff3cbf6c30475fdb036f2a1298e42ddae8d9b2 data/thinair/advancements/air_bladder.json
-15b6d17c0b8c6b2f986c8462b4e78bf2f676e085 data/thinair/advancements/blue_air.json
-81ecc86e136d41b3e86bbf7f8f259191e04313f2 data/thinair/advancements/disco_lantern.json
-0a2d4b96075ce18786f048d1c9f709e2a8bfe1ff data/thinair/advancements/respirator.json
+// 1.20.4	2024-02-14T13:22:53.829046	Advancements
+a2c9549cc5a4e00b4c0ef0794ddaa4a3292df5fb data/thinair/advancements/air_bladder.json
+9c5de0815d67e73ab59876d0f273762922bcbb7f data/thinair/advancements/blue_air.json
+f170bb4a8f981b8ce79d1c76c2f4b4a90af5262b data/thinair/advancements/disco_lantern.json
+0c94313e4c6b703c21597db2c018b8a9991301b7 data/thinair/advancements/respirator.json
 edbfb25e427f0438f30b9fdd93197a28de06b34a data/thinair/advancements/root.json
-cb28152a94a5bbabea63038197bcb42842d88bf5 data/thinair/advancements/safety_lantern.json
-124b02fd8f24af3dfcaa17a73d3c36b7b6a26d02 data/thinair/advancements/signal_torch.json
-a12c3f0575cbc3fe112258ef50661e7196f3c8a3 data/thinair/advancements/soulfire_bottle.json
-9e6fe85ced4bc2c03254cf761cfb9038c8baa260 data/thinair/advancements/water_breathing.json
+89139f7f6e89ee72454261250dc6e3d64b0199df data/thinair/advancements/safety_lantern.json
+e53c265fef85dcfd72eacc66bf8ed51ee48b444b data/thinair/advancements/signal_torch.json
+2c065f3c162b80bff958b987188a682bbfbcae03 data/thinair/advancements/soulfire_bottle.json
+0fda6305a808cff77ca4c28599b76eab6b41b161 data/thinair/advancements/water_breathing.json

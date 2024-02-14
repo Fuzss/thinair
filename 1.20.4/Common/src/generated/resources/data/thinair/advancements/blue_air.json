@@ -1,5 +1,5 @@
 {
-  "parent": "minecraft:air_bladder",
+  "parent": "thinair:air_bladder",
   "criteria": {
     "breathe_blue_air": {
       "conditions": {
