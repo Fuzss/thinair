@@ -2,6 +2,7 @@ package fuzs.thinair.data.client;
 
 import com.google.common.collect.Maps;
 import fuzs.puzzleslib.api.client.data.v2.AbstractModelProvider;
+import fuzs.puzzleslib.api.client.data.v2.ItemModelProperties;
 import fuzs.puzzleslib.api.data.v2.core.DataProviderContext;
 import fuzs.thinair.api.v1.AirQualityLevel;
 import fuzs.thinair.client.ThinAirClient;
@@ -118,42 +119,41 @@ public class ModModelProvider extends AbstractModelProvider {
                     );
                 }, (o1, o2) -> o2, Maps::newLinkedHashMap));
 
-        ItemOverride.Factory[] factories = airQualityLocations.entrySet()
+        ItemModelProperties[] itemModelProperties = airQualityLocations.entrySet()
                 .stream()
                 .map(entry -> {
-                    return ItemOverride.of(entry.getValue(),
+                    return ItemModelProperties.singleOverride(entry.getValue(),
                             ThinAirClient.AIR_QUALITY_LEVEL_MODEL_PROPRTY,
                             entry.getKey().getItemModelProperty()
                     );
                 })
-                .map(itemOverride -> (ItemOverride.Factory) (ResourceLocation resourceLocation) -> itemOverride)
-                .toArray(ItemOverride.Factory[]::new);
+                .toArray(ItemModelProperties[]::new);
 
         ModelTemplate modelTemplate = new ModelTemplate(Optional.empty(), Optional.empty());
         modelTemplate.create(ModelLocationUtils.getModelLocation(item),
                 new TextureMapping(),
                 builder.output,
-                overrides(modelTemplate, factories)
+                ItemModelProperties.overridesFactory(modelTemplate, itemModelProperties)
         );
     }
 
     private static void createAirBladderItem(ItemModelGenerators builder, Item item) {
         String[] suffixes = {"_full", "_used", "_almost_empty"};
-        ItemOverride.Factory[] factories = new ItemOverride.Factory[suffixes.length];
-        for (int i = 0; i < factories.length; i++) {
+        ItemModelProperties[] itemModelProperties = new ItemModelProperties[suffixes.length];
+        for (int i = 0; i < itemModelProperties.length; i++) {
             ResourceLocation modelLocation = ModelLocationUtils.getModelLocation(item, suffixes[i]);
             ResourceLocation resourceLocation = ModelTemplates.FLAT_ITEM.create(modelLocation,
                     TextureMapping.layer0(modelLocation),
                     builder.output
             );
-            float propertyValue = i / (float) factories.length;
-            factories[i] = $ -> ItemOverride.of(resourceLocation, new ResourceLocation("damage"), propertyValue);
+            float propertyValue = i / (float) itemModelProperties.length;
+            itemModelProperties[i] = ItemModelProperties.singleOverride(resourceLocation, new ResourceLocation("damage"), propertyValue);
         }
         ModelTemplate modelTemplate = new ModelTemplate(Optional.empty(), Optional.empty());
         modelTemplate.create(ModelLocationUtils.getModelLocation(item),
                 new TextureMapping(),
                 builder.output,
-                overrides(modelTemplate, factories)
+                ItemModelProperties.overridesFactory(modelTemplate, itemModelProperties)
         );
     }
 }
