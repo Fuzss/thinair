@@ -1,0 +1,37 @@
+{
+    "itemGroup.thinair.main": "Thin Air",
+
+    "item.thinair.respirator": "Respirador",
+    "item.thinair.air_bladder": "Bolsa de Aire",
+    "item.thinair.soulfire_bottle": "Botella de Fuego de Alma",
+
+    "block.thinair.safety_lantern": "Linterna de Seguridad",
+
+    "advancement.thinair:root": "Aire Delgado",
+    "advancement.thinair:root.desc": "El aire no siempre es respirable en lo profundo de la tierra y en otras dimensiones",
+    "advancement.thinair:air_bladder": "Inhala y Exhala",
+    "advancement.thinair:air_bladder.desc": "Usa una Bolsa de Aire para rellenar tu suministro de aire sobre la marcha",
+    "advancement.thinair:soul": "Azules Profundos",
+    "advancement.thinair:soul.desc": "Respira la fuerza vital emitida por el Fuego de Alma para mantener tu aire (¡pero no aumentarlo!)",
+    "advancement.thinair:soulfire_bottle": "En Caso de Emergencia",
+    "advancement.thinair:soulfire_bottle.desc": "Restaura tus pulmones con las almas atrapadas en una Botella de Fuego de Alma",
+    "advancement.thinair:protection_from_yellow": "Respira Profundamente...",
+    "advancement.thinair:protection_from_yellow.desc": "Protégete de un aire asfixiante con algo como un Respirador",
+    "advancement.thinair:protection_from_red": "... Y Aguántala",
+    "advancement.thinair:protection_from_red.desc": "Respira libremente donde no hay aire en absoluto",
+    "advancement.thinair:lantern": "Nuestra Prioridad Número Uno",
+    "advancement.thinair:lantern.desc": "Usa una Linterna de Seguridad para verificar la calidad del aire a tu alrededor",
+    "advancement.thinair:disco_lantern": "¡Luz Roja! ¡Luz Verde!",
+    "advancement.thinair:disco_lantern.desc": "Usa un tinte para cambiar manualmente el color de una Lámpara de Seguridad (puedes raspar el color con un hacha)",
+    "advancement.thinair:signal_torch": "Raspemonos de aqui",
+    "advancement.thinair:signal_torch.desc": "Haz clic derecho en una antorcha para que emita partículas, tal vez para señalar la salida de una cueva",
+
+    "effect.minecraft.water_breathing": "Respiración Libre",
+    "item.minecraft.tipped_arrow.effect.water_breathing": "Flecha de Respiración Libre",
+    "item.minecraft.potion.effect.water_breathing": "Poción de Respiración Libre",
+    "item.minecraft.splash_potion.effect.water_breathing": "Poción Arrojadiza de Respiración Libre",
+    "item.minecraft.lingering_potion.effect.water_breathing": "Poción Persistente de Respiración Libre",
+    "death.attack.drown": "%1$s se asfixio",
+    "death.attack.drown.player": "%1$s se asfixio mientras intentaba escapar de %2$s",
+    "subtitles.entity.player.hurt_drown": "Jugador asfixiándose"
+}
