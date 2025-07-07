@@ -3,9 +3,14 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog].
 
+## [v8.1.6-1.20.1] - 2025-07-07
+### Changed
+- Rework `dimensions` config option, to support an easier to use format based using SNBT and fixing reloading in-game
+- This change will reset all previously configured values for that option
+
 ## [v8.1.5-1.20.1] - 2023-01-29
 ### Fixed
-- Fix respirator not having any effect on Fabric
+- Fix the respirator not having any effect on Fabric
 
 ## [v8.1.4-1.20.1] - 2023-01-24
 ### Added

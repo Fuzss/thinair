@@ -1,5 +1,6 @@
 package fuzs.thinair.api.v1;
 
+import com.mojang.serialization.Codec;
 import fuzs.thinair.ThinAir;
 import fuzs.thinair.config.CommonConfig;
 import fuzs.thinair.core.CommonAbstractions;
@@ -65,6 +66,8 @@ public enum AirQualityLevel implements StringRepresentable {
      */
     RED(false, false, "heavy_breathing_equipment");
 
+    public static final Codec<AirQualityLevel> CODEC = StringRepresentable.fromEnum(AirQualityLevel::values);
+
     public final boolean canBreathe;
     public final boolean canRefillAir;
     @Nullable
@@ -78,9 +81,8 @@ public enum AirQualityLevel implements StringRepresentable {
     AirQualityLevel(boolean canBreathe, boolean canRefillAir, @Nullable String breathingEquipment) {
         this.canBreathe = canBreathe;
         this.canRefillAir = canRefillAir;
-        this.breathingEquipment = breathingEquipment != null ? TagKey.create(Registries.ITEM,
-                ThinAir.id(breathingEquipment)
-        ) : null;
+        this.breathingEquipment =
+                breathingEquipment != null ? TagKey.create(Registries.ITEM, ThinAir.id(breathingEquipment)) : null;
         this.airProviders = TagKey.create(Registries.BLOCK, ThinAir.id(this.getSerializedName() + "_air_providers"));
     }
 
@@ -140,7 +142,8 @@ public enum AirQualityLevel implements StringRepresentable {
     }
 
     boolean isProtected(LivingEntity entity) {
-        return MobEffectUtil.hasWaterBreathing(entity) || entity.isUsingItem() && entity.getUseItem().is(ModRegistry.AIR_REFILLER_ITEM_TAG) || this.isProtectedViaBreathingEquipment(entity);
+        return MobEffectUtil.hasWaterBreathing(entity) || entity.isUsingItem() && entity.getUseItem()
+                .is(ModRegistry.AIR_REFILLER_ITEM_TAG) || this.isProtectedViaBreathingEquipment(entity);
     }
 
     private boolean isProtectedViaBreathingEquipment(LivingEntity entity) {

@@ -33,14 +33,20 @@ public class AirQualityHelperImpl implements AirQualityHelper {
         for (int x = -2; x <= 2; x++) {
             for (int z = -2; z <= 2; z++) {
                 ChunkPos posInChunk = new ChunkPos(chunkAtCenter.x + x, chunkAtCenter.z + z);
-                Optional<AirBubblePositionsCapability> optional = Optional.ofNullable(level.getChunkSource().getChunkNow(posInChunk.x, posInChunk.z)).flatMap(ModRegistry.AIR_BUBBLE_POSITIONS_CAPABILITY::maybeGet);
+                Optional<AirBubblePositionsCapability> optional = Optional.ofNullable(level.getChunkSource()
+                                .getChunkNow(posInChunk.x, posInChunk.z))
+                        .flatMap(ModRegistry.AIR_BUBBLE_POSITIONS_CAPABILITY::maybeGet);
                 if (optional.isPresent()) {
-                    for (Map.Entry<BlockPos, AirQualityLevel> entry : optional.get().getAirBubblePositions().entrySet()) {
+                    for (Map.Entry<BlockPos, AirQualityLevel> entry : optional.get()
+                            .getAirBubblePositions()
+                            .entrySet()) {
                         BlockPos blockPos = entry.getKey();
                         AirQualityLevel airQualityLevel = entry.getValue();
                         Objects.requireNonNull(airQualityLevel, "air quality level is null");
                         if (bestAirBubbleQuality == null || airQualityLevel.isBetterThan(bestAirBubbleQuality)) {
-                            double distanceSq = new Vec3(blockPos.getX() + 0.5, blockPos.getY() + 0.5, blockPos.getZ() + 0.5).distanceToSqr(location);
+                            double distanceSq = new Vec3(blockPos.getX() + 0.5,
+                                    blockPos.getY() + 0.5,
+                                    blockPos.getZ() + 0.5).distanceToSqr(location);
                             if (distanceSq < Math.pow(airQualityLevel.getAirProviderRadius(), 2.0)) {
                                 if (airQualityLevel == AirQualityLevel.GREEN) {
                                     return AirQualityLevel.GREEN;
@@ -57,12 +63,13 @@ public class AirQualityHelperImpl implements AirQualityHelper {
         if (bestAirBubbleQuality != null) {
             return bestAirBubbleQuality;
         } else {
-            return CommonConfig.getAirQualityAtLevelByDimension(level.dimension().location(), (int) Math.round(location.y));
+            return CommonConfig.getAirQualityAtLevelByDimension(level.dimension(), (int) Math.round(location.y));
         }
     }
 
     @Override
     public boolean isSensitiveToAirQuality(LivingEntity entity) {
-        return entity.getType().is(ModRegistry.AIR_QUALITY_SENSITIVE_ENTITY_TYPE_TAG) && (!(entity instanceof Player player) || !player.getAbilities().invulnerable);
+        return entity.getType().is(ModRegistry.AIR_QUALITY_SENSITIVE_ENTITY_TYPE_TAG) && (
+                !(entity instanceof Player player) || !player.getAbilities().invulnerable);
     }
 }
