@@ -2,7 +2,7 @@ package fuzs.thinair.api.v1;
 
 import com.mojang.serialization.Codec;
 import fuzs.thinair.ThinAir;
-import fuzs.thinair.config.CommonConfig;
+import fuzs.thinair.config.ServerConfig;
 import fuzs.thinair.core.CommonAbstractions;
 import fuzs.thinair.init.ModRegistry;
 import net.minecraft.core.registries.Registries;
@@ -117,10 +117,10 @@ public enum AirQualityLevel implements StringRepresentable {
 
     public double getAirProviderRadius() {
         return switch (this) {
-            case RED -> CommonConfig.redAirProviderRadius.get();
-            case GREEN -> CommonConfig.greenAirProviderRadius.get();
-            case YELLOW -> CommonConfig.yellowAirProviderRadius.get();
-            case BLUE -> CommonConfig.blueAirProviderRadius.get();
+            case RED -> ServerConfig.redAirProviderRadius.get();
+            case GREEN -> ServerConfig.greenAirProviderRadius.get();
+            case YELLOW -> ServerConfig.yellowAirProviderRadius.get();
+            case BLUE -> ServerConfig.blueAirProviderRadius.get();
         };
     }
 

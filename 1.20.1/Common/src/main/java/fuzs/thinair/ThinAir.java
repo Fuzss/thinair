@@ -1,5 +1,6 @@
 package fuzs.thinair;
 
+import fuzs.puzzleslib.api.config.v3.ConfigHolder;
 import fuzs.puzzleslib.api.core.v1.ContentRegistrationFlags;
 import fuzs.puzzleslib.api.core.v1.ModConstructor;
 import fuzs.puzzleslib.api.core.v1.context.CreativeModeTabContext;
@@ -13,8 +14,9 @@ import fuzs.puzzleslib.api.event.v1.server.LootTableLoadEvents;
 import fuzs.puzzleslib.api.item.v2.CreativeModeTabConfigurator;
 import fuzs.puzzleslib.api.network.v3.NetworkHandlerV3;
 import fuzs.thinair.advancements.ModAdvancementTriggers;
-import fuzs.thinair.handler.DrownedAttackHandler;
+import fuzs.thinair.config.ServerConfig;
 import fuzs.thinair.handler.AirBubbleTracker;
+import fuzs.thinair.handler.DrownedAttackHandler;
 import fuzs.thinair.handler.TickAirHandler;
 import fuzs.thinair.init.ModRegistry;
 import fuzs.thinair.network.ClientboundChunkAirQualityMessage;
@@ -38,6 +40,7 @@ public class ThinAir implements ModConstructor {
     public static final String MOD_NAME = "Thin Air";
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_NAME);
 
+    public static final ConfigHolder CONFIG = ConfigHolder.builder(MOD_ID).server(ServerConfig.class);
     public static final NetworkHandlerV3 NETWORK = NetworkHandlerV3.builder(MOD_ID).registerClientbound(ClientboundChunkAirQualityMessage.class);
 
     @Override

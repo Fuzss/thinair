@@ -2,7 +2,7 @@ package fuzs.thinair.world.level.block;
 
 import fuzs.puzzleslib.api.event.v1.core.EventResultHolder;
 import fuzs.thinair.advancements.ModAdvancementTriggers;
-import fuzs.thinair.config.CommonConfig;
+import fuzs.thinair.config.ServerConfig;
 import fuzs.thinair.init.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
@@ -40,7 +40,7 @@ public class SignalTorchBlock extends TorchBlock {
     }
 
     public static EventResultHolder<InteractionResult> onUseBlock(Player player, Level level, InteractionHand interactionHand, BlockHitResult hitResult) {
-        if (!CommonConfig.enableSignalTorches.get() || interactionHand != InteractionHand.MAIN_HAND || player.isDiscrete()) {
+        if (!ServerConfig.enableSignalTorches.get() || interactionHand != InteractionHand.MAIN_HAND || player.isDiscrete()) {
             return EventResultHolder.pass();
         }
         BlockPos pos = hitResult.getBlockPos();

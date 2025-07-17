@@ -8,7 +8,6 @@ import fuzs.puzzleslib.api.event.v1.core.EventResult;
 import fuzs.puzzleslib.api.event.v1.core.ForgeEventInvokerRegistry;
 import fuzs.puzzleslib.api.event.v1.data.DefaultedInt;
 import fuzs.puzzleslib.api.event.v1.entity.living.LivingEvents;
-import fuzs.thinair.config.CommonConfig;
 import fuzs.thinair.data.*;
 import fuzs.thinair.init.ForgeModRegistry;
 import fuzs.thinair.init.ModRegistry;
@@ -19,14 +18,9 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.common.capabilities.CapabilityToken;
 import net.minecraftforge.event.entity.living.LivingBreatheEvent;
 import net.minecraftforge.event.entity.living.LivingDrownEvent;
-import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.config.ModConfig;
-import net.minecraftforge.fml.event.config.ModConfigEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLConstructModEvent;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
 import java.util.OptionalInt;
 
@@ -37,8 +31,6 @@ public class ThinAirForge {
     @SubscribeEvent
     public static void onConstructMod(final FMLConstructModEvent evt) {
         ForgeModRegistry.touch();
-        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, CommonConfig.SPEC);
-        registerLoadingHandlers(FMLJavaModLoadingContext.get().getModEventBus());
         ModConstructor.construct(ThinAir.MOD_ID, ThinAir::new);
         registerCapabilities();
         // TODO remove when this has been re-enabled in Puzzles Lib
@@ -53,17 +45,6 @@ public class ThinAirForge {
                 ModEntityTypeTagsProvider::new,
                 ModRecipeProvider::new);
         DataProviderHelper.registerDataProviders(ThinAir.MOD_ID, ModItemTagsProvider::new);
-    }
-
-    private static void registerLoadingHandlers(IEventBus eventBus) {
-        eventBus.addListener((final ModConfigEvent evt) -> {
-            if (evt instanceof ModConfigEvent.Loading || evt instanceof ModConfigEvent.Reloading) {
-                if (evt.getConfig().getModId().equals(ThinAir.MOD_ID)
-                        && evt.getConfig().getType() == ModConfig.Type.COMMON) {
-                    CommonConfig.onModConfigLoading();
-                }
-            }
-        });
     }
 
     @Deprecated

@@ -1,6 +1,8 @@
 package fuzs.thinair.config;
 
 import com.google.common.collect.ImmutableMap;
+import fuzs.puzzleslib.api.config.v3.ConfigCore;
+import fuzs.puzzleslib.api.config.v3.ValueCallback;
 import fuzs.thinair.api.v1.AirQualityLevel;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.Level;
@@ -10,7 +12,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-public class CommonConfig {
+public class ServerConfig implements ConfigCore {
     static final Map<ResourceKey<Level>, DimensionAirQuality> DEFAULT_DIMENSION_ENTRIES = ImmutableMap.of(Level.OVERWORLD,
             new DimensionAirQuality(AirQualityLevel.YELLOW,
                     new DimensionAirQuality.BoundedAirQuality(AirQualityLevel.GREEN, 0, 256)),
@@ -18,12 +20,6 @@ public class CommonConfig {
             new DimensionAirQuality(AirQualityLevel.YELLOW),
             Level.END,
             new DimensionAirQuality(AirQualityLevel.RED));
-    public static final ForgeConfigSpec SPEC;
-
-    static {
-        var specPair = new ForgeConfigSpec.Builder().configure(CommonConfig::new);
-        SPEC = specPair.getRight();
-    }
 
     public static ForgeConfigSpec.ConfigValue<List<? extends String>> dimensions;
 
@@ -37,7 +33,8 @@ public class CommonConfig {
 
     private static Map<ResourceKey<Level>, DimensionAirQuality> dimensionEntries = Collections.emptyMap();
 
-    public CommonConfig(ForgeConfigSpec.Builder builder) {
+    @Override
+    public void addToBuilder(ForgeConfigSpec.Builder builder, ValueCallback callback) {
         dimensions = builder.comment(
                         "Air qualities at different heights in different dimensions, with one string applying to one dimension.",
                         "A basic entry consists of the dimension's identifier and the default air level in that dimension.",
@@ -71,7 +68,8 @@ public class CommonConfig {
         builder.pop();
     }
 
-    public static void onModConfigLoading() {
+    @Override
+    public void afterConfigReload() {
         dimensionEntries = AirQualitySerializationHelper.parseDimensionEntries(dimensions.get());
     }
 

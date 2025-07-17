@@ -3,7 +3,7 @@ package fuzs.thinair.helper;
 import fuzs.thinair.api.v1.AirQualityHelper;
 import fuzs.thinair.api.v1.AirQualityLevel;
 import fuzs.thinair.capability.AirBubblePositionsCapability;
-import fuzs.thinair.config.CommonConfig;
+import fuzs.thinair.config.ServerConfig;
 import fuzs.thinair.init.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.LivingEntity;
@@ -63,7 +63,7 @@ public class AirQualityHelperImpl implements AirQualityHelper {
         if (bestAirBubbleQuality != null) {
             return bestAirBubbleQuality;
         } else {
-            return CommonConfig.getAirQualityAtLevelByDimension(level.dimension(), (int) Math.round(location.y));
+            return ServerConfig.getAirQualityAtLevelByDimension(level.dimension(), (int) Math.round(location.y));
         }
     }
 

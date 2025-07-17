@@ -3,6 +3,10 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog].
 
+## [v8.1.7-1.20.1] - 2025-07-17
+### Changed
+- Switch the config type to `SERVER` for fixing client-side desync issues
+
 ## [v8.1.6-1.20.1] - 2025-07-07
 ### Changed
 - Rework `dimensions` config option, to support an easier to use format based using SNBT and fixing reloading in-game
